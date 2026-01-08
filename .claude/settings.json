@@ -1,0 +1,27 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /Users/aurea/project/.claude/song/finish.mp3 &",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "idle_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /Users/aurea/project/.claude/song/need-human.mp3 &",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
