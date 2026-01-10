@@ -1,7 +1,6 @@
 ---
 allowed-tools: Bash(git *)
 description: Quick commit and push following Conventional Commits
-model: haiku
 ---
 
 You are a git commit automation tool following [Conventional Commits](https://www.conventionalcommits.org/) specification.

@@ -13,6 +13,7 @@ Follow CLAUDE.md rules for Clean Architecture.
 ## Ultra Think Strategy
 
 Ultra think before each phase transition:
+- After clarification: ensure you fully understand the issue
 - After exploration results: reflect on completeness before analyzing
 - Before implementation: consider edge cases, patterns to follow, potential issues
 - After validation: ensure the fix addresses root cause, not symptoms
@@ -31,7 +32,31 @@ Extract:
 
 ---
 
-## 2. EXPLORE (PARALLEL)
+## 2. CLARIFY ISSUE
+
+Use AskUserQuestion to clarify before exploration:
+
+### Bug context (if not specified)
+- Can you reproduce the bug? Steps to reproduce?
+- What is the expected vs actual behavior?
+- When did it start happening? (recent deploy, config change?)
+- Are there error logs or screenshots available?
+
+### Impact & Priority (if not specified)
+- Is this blocking production?
+- Who/what is affected?
+- Is there a temporary workaround in place?
+
+### Scope (if not specified)
+- Should we fix root cause or apply quick workaround first?
+- Are there related issues to address at the same time?
+- Environment affected: dev, staging, prod?
+
+Do not proceed until the issue is fully understood.
+
+---
+
+## 3. EXPLORE (PARALLEL)
 
 Launch agents based on issue scope (single message, parallel execution):
 
@@ -44,7 +69,7 @@ Launch agents based on issue scope (single message, parallel execution):
 
 ---
 
-## 2.5 POST-EXPLORATION CHECK
+## 3.5 POST-EXPLORATION CHECK
 
 After agents return, verify:
 1. Information complete? If not -> launch additional agents
@@ -52,7 +77,7 @@ After agents return, verify:
 
 ---
 
-## 3. ANALYZE
+## 4. ANALYZE
 
 Produce analysis:
 
@@ -74,7 +99,7 @@ Produce analysis:
 
 ---
 
-## 4. PLAN
+## 5. PLAN
 
 Create fix strategy:
 
@@ -101,7 +126,7 @@ Create fix strategy:
 
 ---
 
-## 5. VALIDATE
+## 6. VALIDATE
 
 Ask with AskUserQuestion: "Proceed with fix?"
 - "Apply fix"
@@ -110,7 +135,7 @@ Ask with AskUserQuestion: "Proceed with fix?"
 
 ---
 
-## 6. IMPLEMENT
+## 7. IMPLEMENT
 
 After validation, implement:
 1. Backend changes first
@@ -125,7 +150,7 @@ For significant UI: `Skill(skill="frontend-design:frontend-design")`
 
 ---
 
-## 7. VERIFY
+## 8. VERIFY
 
 ```bash
 cd backend && go build ./... && go vet ./...
@@ -136,7 +161,7 @@ Database verification: `mcp__supabase-dev__get_advisors` or `mcp__supabase-prod_
 
 ---
 
-## 8. SUMMARY
+## 9. SUMMARY
 
 ```markdown
 ## Fix Complete
@@ -158,7 +183,8 @@ Database verification: `mcp__supabase-dev__get_advisors` or `mcp__supabase-prod_
 
 ## Rules
 
-- **EXPLORE FIRST** - never assume, always investigate
+- **CLARIFY FIRST** - fully understand the issue before exploring
+- **EXPLORE SECOND** - never assume, always investigate
 - **ROOT CAUSE** - fix the cause, not the symptom
 - **VALIDATE** - always ask before implementing
 - **STAY IN SCOPE** - change only what's needed

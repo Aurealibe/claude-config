@@ -1,5 +1,5 @@
 ---
-name: yolo
+name: oneshot
 description: Quick implementation without a full spec file
 arguments:
   - name: task
@@ -12,13 +12,41 @@ Follow CLAUDE.md rules.
 ## Ultra Think Strategy
 
 Ultra think before each phase transition:
+- After clarification: ensure you understand exactly what to build
 - After exploration results: reflect on completeness before planning
 - Before implementation: consider edge cases, patterns to follow, potential issues
 - After validation: ensure the approach aligns with user intent
 
 ---
 
-## 1. EXPLORE (PARALLEL)
+## 1. CLARIFY REQUIREMENTS
+
+Use AskUserQuestion to clarify before exploration:
+
+### Must clarify (if not specified)
+- Error messages for user-facing failures?
+- Default values for new fields?
+- Validation rules?
+- What triggers state changes?
+
+### UX Decisions (if not specified)
+- What happens on success? (toast, redirect, refresh?)
+- What happens on error?
+- Confirmation dialogs needed?
+
+### Permissions (if not specified)
+- Who can perform each action?
+- RLS policy rules?
+
+### Scope (if not specified)
+- Backend only, frontend only, or both?
+- Database changes needed?
+
+Do not proceed until critical details are clarified.
+
+---
+
+## 2. EXPLORE (PARALLEL)
 
 Launch agents based on task scope (single message, parallel execution):
 
@@ -32,22 +60,12 @@ Launch agents based on task scope (single message, parallel execution):
 
 ---
 
-## 1.5 POST-EXPLORATION CHECK
+## 2.5 POST-EXPLORATION CHECK
 
 After agents return, verify:
 1. Database info complete? If not -> launch explore-db
 2. Library docs complete? If not -> launch explore-docs
 3. For modifications: Do I have ALL files where similar patterns exist?
-
----
-
-## 2. CLARIFY
-
-Use AskUserQuestion if requirements are unclear:
-- Error messages for user-facing failures?
-- Default values for new fields?
-- Validation rules?
-- What happens on success/error?
 
 ---
 
@@ -111,6 +129,7 @@ cd frontend && npm run build
 
 ## Rules
 
-- **EXPLORE FIRST** - parallel exploration before planning
+- **CLARIFY FIRST** - understand requirements before exploring
+- **EXPLORE SECOND** - parallel exploration before planning
 - **VALIDATE** - always ask before implementing
 - **STAY IN SCOPE** - only what's needed
