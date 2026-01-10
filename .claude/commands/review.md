@@ -21,21 +21,34 @@ arguments:
 
 Think carefully for code review. Follow CLAUDE.md rules.
 
+## Critical Instruction
+
+**YOU MUST use the Task tool with subagent_type to launch agents. NEVER read or analyze code files directly yourself.**
+Agents do the heavy lifting - you orchestrate and aggregate their results.
+
 ## Tool Strategy
 
-Prefer specialized agents to preserve context:
-- Documentation: `explore-docs` agent
-- Codebase: `explore-codebase` agent
-- Database: `explore-db` agent
+Use Task tool with these subagent_type values:
+- `explore-docs` - Documentation lookup
+- `explore-codebase` - Code pattern search
+- `explore-db` - Database schema exploration
+- `backend-code-optimizer` - Go code quality analysis (returns score + issues)
+- `frontend-code-reviewer` - React/TS code quality analysis (returns score + issues)
 
 ---
 
 ## 1. DETERMINE SOURCE & SCOPE
 
-**Input Priority** (use first available):
-1. `$ARGUMENTS.spec` → Read spec, extract file list
-2. `$ARGUMENTS.commit` → `git show --name-only $ARGUMENTS.commit`
-3. `$ARGUMENTS.mode` → Git diff (pushed or local)
+### Spec Handling
+
+- **Spec alone** (`/review spec:file.md`): Extract file list FROM the spec (exclusive source)
+- **Spec + other source** (`/review spec:file.md mode:local`): Spec provides CONTEXT, other source determines files
+
+### File Source Priority (use first available):
+
+1. `$ARGUMENTS.commit` → `git show --name-only $ARGUMENTS.commit`
+2. `$ARGUMENTS.mode` → Git diff (pushed or local)
+3. `$ARGUMENTS.spec` alone → Extract files from spec
 4. **Default**: `mode=local` (uncommitted changes)
 
 ### If mode = "pushed" (or default when no args and clean working tree)
@@ -56,8 +69,14 @@ git diff HEAD
 
 ### If spec provided
 
-- Read the spec file
-- Extract all referenced files (backend and frontend)
+- Read the spec file for context (requirements, architecture, expected behavior)
+- **Spec alone**: Extract all referenced files from spec as review targets
+- **Spec + other source**: Use spec as context only, files come from other source
+
+Store spec context for use in:
+- Section 2.6 DEEP ANALYSIS (pass to agents)
+- Section 3 ANALYZE (validate against requirements)
+- Section 5 PROPOSE FIXES (align with spec intent)
 
 ### If commit provided
 
@@ -87,6 +106,7 @@ git show $ARGUMENTS.commit
 ## Review Scope
 
 **Source**: [mode/spec/commit/brief]
+**Spec Context**: [spec file path if provided, otherwise "None"]
 **Commit**: [hash if applicable]
 **Detected Scope**: [backend/frontend/both]
 
@@ -104,16 +124,18 @@ git show $ARGUMENTS.commit
 
 ## 2. EXPLORE (PARALLEL)
 
-Launch agents based on detected scope (single message, parallel execution):
+**MANDATORY: Use Task tool with subagent_type for each agent. Do NOT read files directly.**
 
-| Condition | Agent | Prompt |
-|-----------|-------|--------|
-| Backend present | explore-codebase | "Review Go files [list]. Check duplication, unused code, Clean Architecture violations" |
-| Backend present | explore-codebase | "Find similar existing patterns in backend/. Compare with changes" |
-| Backend present | explore-db | "dev - Find tables related to [feature]" |
-| Frontend present | explore-codebase | "Review React/TypeScript files [list]. Check duplication, unused hooks, pattern violations" |
-| Frontend present | explore-codebase | "Find similar existing components/hooks. Compare patterns" |
-| External library | explore-docs | "[library] best practices" |
+Launch agents in a single message (parallel execution):
+
+| Condition | Task tool call |
+|-----------|----------------|
+| Backend present | `Task(subagent_type="explore-codebase", prompt="Review Go files [list]. Check duplication, unused code, Clean Architecture violations")` |
+| Backend present | `Task(subagent_type="explore-codebase", prompt="Find similar existing patterns in backend/. Compare with changes")` |
+| Backend present | `Task(subagent_type="explore-db", prompt="dev - Find tables related to [feature]")` |
+| Frontend present | `Task(subagent_type="explore-codebase", prompt="Review React/TypeScript files [list]. Check duplication, unused hooks, pattern violations")` |
+| Frontend present | `Task(subagent_type="explore-codebase", prompt="Find similar existing components/hooks. Compare patterns")` |
+| External library | `Task(subagent_type="explore-docs", prompt="[library] best practices")` |
 
 ---
 
@@ -123,6 +145,43 @@ After agents return, verify:
 1. Context complete? If not → additional explore-codebase
 2. Library docs needed? → explore-docs
 3. Database schema needed? → explore-db
+
+---
+
+## 2.6 DEEP ANALYSIS (PARALLEL)
+
+**MANDATORY: Use Task tool with subagent_type. Do NOT analyze files directly.**
+
+Launch specialized agents based on detected scope. Skip if no files for that domain.
+
+### Scope Detection Logic
+
+1. If `$ARGUMENTS.scope` is set → use only that scope
+2. Else auto-detect from file patterns:
+   - `backend/**/*.go` files present → include backend
+   - `frontend/src/**/*.{ts,tsx}` files present → include frontend
+
+### Agent Dispatch (single message, parallel if both scopes)
+
+**Include spec context in prompt if available.**
+
+| Condition | Task tool call |
+|-----------|----------------|
+| Backend scope active AND backend files present | `Task(subagent_type="backend-code-optimizer", prompt="Analyze these Go files for quality: [file list]. Context from exploration: [patterns found]. Spec context: [spec summary if available]. Provide quality score and categorized issues.")` |
+| Frontend scope active AND frontend files present | `Task(subagent_type="frontend-code-reviewer", prompt="Review these React/TypeScript files: [file list]. Context from exploration: [patterns found]. Spec context: [spec summary if available]. Provide quality score and categorized issues.")` |
+
+### Skip Conditions
+
+- If `scope=frontend` → skip `backend-code-optimizer` entirely
+- If `scope=backend` → skip `frontend-code-reviewer` entirely
+- If no frontend files changed → skip `frontend-code-reviewer`
+- If no backend files changed → skip `backend-code-optimizer`
+- If no files changed at all → report "No files to review" and stop
+
+**Agent outputs to integrate:**
+- Quality scores → merge into section 4
+- Issues categorized as Critical/Important/Nice-to-have → merge into section 5
+- Optimization recommendations
 
 ---
 
@@ -203,9 +262,9 @@ Read each changed file and produce analysis.
 
 ## 4. QUALITY SCORES
 
-Provide separate scores per domain.
+Aggregate scores from specialized agents (section 2.6). Skip domains with no agent output.
 
-### Backend Score (if applicable)
+### Backend Score (from `backend-code-optimizer`)
 
 ```markdown
 ## Backend Quality Score: X/100
@@ -218,7 +277,7 @@ Provide separate scores per domain.
 | Performance | X/25 | [notes] |
 ```
 
-### Frontend Score (if applicable)
+### Frontend Score (from `frontend-code-reviewer`)
 
 ```markdown
 ## Frontend Quality Score: X/100
@@ -234,8 +293,12 @@ Provide separate scores per domain.
 
 ### Global Score
 
+Weighted average based on file count per domain.
+
 ```markdown
 ## Global Quality Score: X/100
+
+Formula: (Backend Score × backend_files + Frontend Score × frontend_files) / total_files
 
 [1-2 sentence overall assessment]
 ```
@@ -276,17 +339,26 @@ Options:
 
 ## 7. IMPLEMENT (if requested)
 
-After validation, implement directly.
+**This is the core purpose of the review command: identify issues AND fix them.**
+
+After user validation, implement fixes directly using Edit tool. Do NOT just report - actually modify the files.
 
 **Order:**
 1. Critical issues first
 2. Important issues
 3. Nice-to-have (if approved)
 
+**Implementation approach:**
+- Use Edit tool to apply each fix
+- Include simplification recommendations from agents
+- Apply one fix at a time, verify it doesn't break anything
+- Track progress with TodoWrite
+
 **Rules:**
 - Do not break existing functionality
 - Do not change business logic unless it's a bug
-- Keep changes minimal
+- Keep changes minimal but complete
+- Apply ALL approved fixes, don't stop halfway
 - If logic seems wrong, ASK before changing
 
 ---
@@ -340,10 +412,12 @@ Database (if schema changes): `mcp__supabase-dev__get_advisors`
 
 ## Rules
 
+- **USE AGENTS** - Task tool with subagent_type, never analyze directly
 - **EXPLORE FIRST** - parallel agents before analysis
-- **READ BEFORE JUDGING** - read actual file content
 - **MEASURE** - provide quality scores per domain
 - **PRIORITIZE** - Critical > Important > Nice-to-have
+- **SIMPLIFY** - include simplification recommendations from agents
+- **FIX WHAT YOU FIND** - after user approval, actually implement fixes with Edit tool
 - **MINIMAL CHANGES** - fix issues, don't refactor unless asked
 - **CHECK i18n** - verify next-intl for all frontend text
 - **VERIFY BUILDS** - run build commands before completing
