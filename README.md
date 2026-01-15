@@ -1,6 +1,6 @@
 # Claude Code Config
 
-**Un framework de configuration complet pour Claude Code** - Transformez Claude en un assistant de développement autonome avec des agents spécialisés, des commandes de workflow et des notifications audio.
+**A comprehensive configuration framework for Claude Code** - Transform Claude into an autonomous development assistant with specialized agents, workflow commands, and audio notifications.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Author](https://img.shields.io/badge/Author-@Aurealibe-blue.svg)](https://github.com/Aurealibe)
@@ -9,170 +9,170 @@
 
 ## Introduction
 
-### Qu'est-ce que Claude Code ?
+### What is Claude Code?
 
-[Claude Code](https://code.claude.com/docs/en/overview) est l'outil CLI officiel d'Anthropic qui permet d'utiliser Claude directement dans votre terminal. Il peut lire et modifier des fichiers, exécuter des commandes, naviguer dans votre codebase, et bien plus encore.
+[Claude Code](https://code.claude.com/docs/en/overview) is Anthropic's official CLI tool that allows you to use Claude directly in your terminal. It can read and modify files, execute commands, navigate your codebase, and much more.
 
-### Pourquoi ce repository ?
+### Why this repository?
 
-Ce repository fournit une **configuration avancée et extensible** pour Claude Code, comprenant :
+This repository provides an **advanced and extensible configuration** for Claude Code, including:
 
-- **6 Agents spécialisés** pour l'exploration parallèle et la revue de code (code, base de données, documentation, web, optimisation backend, revue frontend)
-- **7 Commandes de workflow** pour automatiser le cycle de développement complet
-- **Système de notifications audio** pour savoir quand Claude a terminé ou attend votre input
-- **Guidelines de développement** personnalisables pour votre stack technique
-- **Patterns d'architecture** transférables à n'importe quel langage/framework
+- **6 Specialized agents** for parallel exploration and code review (code, database, documentation, web, backend optimization, frontend review)
+- **7 Workflow commands** to automate the complete development cycle
+- **Audio notification system** to know when Claude has finished or is waiting for your input
+- **Customizable development guidelines** for your tech stack
+- **Architecture patterns** transferable to any language/framework
 
-### Ce que ça apporte concrètement
+### What it actually brings
 
-| Sans cette config | Avec cette config |
-|-------------------|-------------------|
-| Claude explore séquentiellement | Exploration parallèle avec 4 agents spécialisés |
-| Pas de workflow structuré | Workflow Explore → Plan → Validate → Implement → Verify |
-| Vous devez surveiller Claude | Notifications audio quand Claude termine ou attend |
-| Approche ad-hoc | Commandes standardisées (`/commits`, `/review`, `/hotfix`, etc.) |
-| Claude peut inventer des patterns | Guidelines forcent la réutilisation du code existant |
+| Without this config | With this config |
+|---------------------|------------------|
+| Claude explores sequentially | Parallel exploration with 4 specialized agents |
+| No structured workflow | Workflow: Explore → Plan → Validate → Implement → Verify |
+| You have to watch Claude | Audio notifications when Claude finishes or waits |
+| Ad-hoc approach | Standardized commands (`/commits`, `/review`, `/hotfix`, etc.) |
+| Claude may invent patterns | Guidelines force reuse of existing code |
 
 ---
 
-## Best Practices - Ma Methodologie
+## Best Practices - My Methodology
 
-Voici comment j'utilise cette configuration en production pour obtenir du **code production-ready** de maniere consistante.
+Here's how I use this configuration in production to consistently get **production-ready code**.
 
-### 1. Lancer Claude Code
+### 1. Launch Claude Code
 
 ```bash
-# Mode normal (recommande)
+# Normal mode (recommended)
 claude
 
-# Puis activez le mode "thinking" (ultrathink) pour de meilleurs resultats
+# Then enable "thinking" mode (ultrathink) for better results
 ```
 
-**Option avancee (plus dangereux) :**
+**Advanced option (more dangerous):**
 ```bash
 claude --dangerously-skip-permissions
 ```
-Cette option desactive les confirmations de securite. Claude peut executer des commandes sans demander. A utiliser uniquement si vous savez ce que vous faites.
+This option disables security confirmations. Claude can execute commands without asking. Only use if you know what you're doing.
 
-Le mode thinking permet a Claude de reflechir plus profondement avant d'agir.
+Thinking mode allows Claude to think more deeply before acting.
 
-### 2. Workflow recommande
+### 2. Recommended Workflow
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  /plan-feature name="ma-feature"                            │
-│  → Brainstorming + ecriture du fichier de spec              │
-│  → Genere: MA_FEATURE_FEATURE.md                            │
+│  /plan-feature name="my-feature"                            │
+│  → Brainstorming + spec file writing                        │
+│  → Generates: MY_FEATURE_FEATURE.md                         │
 └─────────────────────────────────────────────────────────────┘
                             ↓
 ┌─────────────────────────────────────────────────────────────┐
-│  /dev spec="MA_FEATURE_FEATURE.md" phase="1"                │
-│  → Developpe la phase 1 (ex: Domain layer)                  │
-│  → /clear apres completion                                  │
+│  /dev spec="MY_FEATURE_FEATURE.md" phase="1"                │
+│  → Develops phase 1 (e.g., Domain layer)                    │
+│  → /clear after completion                                  │
 └─────────────────────────────────────────────────────────────┘
                             ↓
 ┌─────────────────────────────────────────────────────────────┐
-│  /dev spec="MA_FEATURE_FEATURE.md" phase="2" done="1"       │
-│  → Developpe la phase 2 (ex: Infrastructure)                │
-│  → /clear apres completion                                  │
+│  /dev spec="MY_FEATURE_FEATURE.md" phase="2" done="1"       │
+│  → Develops phase 2 (e.g., Infrastructure)                  │
+│  → /clear after completion                                  │
 └─────────────────────────────────────────────────────────────┘
                             ↓
                           ...
                             ↓
 ┌─────────────────────────────────────────────────────────────┐
-│  /review spec="MA_FEATURE_FEATURE.md"                       │
-│  → Review du code contre la spec                            │
-│  → Corrections si necessaire                                │
+│  /review spec="MY_FEATURE_FEATURE.md"                       │
+│  → Code review against spec                                 │
+│  → Corrections if needed                                    │
 └─────────────────────────────────────────────────────────────┘
                             ↓
 ┌─────────────────────────────────────────────────────────────┐
 │  /commits                                                   │
-│  → Commit automatique (Conventional Commits)                │
-│  → Push vers le repo                                        │
+│  → Automatic commit (Conventional Commits)                  │
+│  → Push to repo                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### 3. Regle d'or : Un contexte vide = meilleurs resultats
+### 3. Golden Rule: Empty context = better results
 
-**CRITIQUE** : Ne jamais depasser le contexte de Claude.
+**CRITICAL**: Never exceed Claude's context.
 
-- **Une phase de dev = un nouveau chat**
-- Apres chaque session, faites `/clear` et repartez sur du neuf
-- Privilegiez toujours un contexte vide
+- **One dev phase = one new chat**
+- After each session, do `/clear` and start fresh
+- Always prefer an empty context
 
-Pourquoi ? Claude performe mieux avec un contexte frais. Un contexte surcharge degrade la qualite des reponses.
+Why? Claude performs better with a fresh context. An overloaded context degrades response quality.
 
-### 4. Pourquoi cette methodologie > mode plan par defaut
+### 4. Why this methodology > default plan mode
 
-Vous pouvez utiliser Claude Code avec le mode plan par defaut, mais ma methodologie est meilleure car :
+You can use Claude Code with default plan mode, but my methodology is better because:
 
-| Mode plan par defaut | Cette methodologie |
-|---------------------|-------------------|
-| Agents internes non configurables | **Agents custom configurables** (ajoutez les votres) |
-| Exploration sequentielle | **Exploration parallele** (docs + code + db en meme temps) |
-| Plan une seule fois au debut | Planification a CHAQUE commande |
-| Pas de validation intermediaire | Validation utilisateur obligatoire avant chaque implementation |
-| Contexte qui s'accumule | Contexte frais a chaque phase |
-| Resultats variables | Resultats consistants |
+| Default plan mode | This methodology |
+|-------------------|------------------|
+| Internal agents not configurable | **Custom configurable agents** (add your own) |
+| Sequential exploration | **Parallel exploration** (docs + code + db simultaneously) |
+| Plans once at the beginning | Planning at EVERY command |
+| No intermediate validation | Mandatory user validation before each implementation |
+| Accumulating context | Fresh context at each phase |
+| Variable results | Consistent results |
 
-**La vraie plus-value : les agents en parallele.**
+**The real value: parallel agents.**
 
-Quand vous lancez une commande (`/dev`, `/hotfix`, `/explore`...), elle lance automatiquement plusieurs agents en parallele :
+When you launch a command (`/dev`, `/hotfix`, `/explore`...), it automatically launches multiple agents in parallel:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    VOTRE COMMANDE                           │
-│                                                             │
-│   ┌─────────────┐  ┌─────────────┐  ┌─────────────┐        │
-│   │ explore-    │  │ explore-db  │  │ explore-    │        │
-│   │ codebase    │  │             │  │ docs        │        │
-│   │             │  │  (schema,   │  │             │        │
-│   │ (patterns,  │  │   tables,   │  │ (librairies,│        │
-│   │  code       │  │   RLS)      │  │  APIs)      │        │
-│   │  existant)  │  │             │  │             │        │
-│   └──────┬──────┘  └──────┬──────┘  └──────┬──────┘        │
-│          │                │                │                │
-│          └────────────────┼────────────────┘                │
-│                           ▼                                 │
-│              Contexte complet en quelques secondes          │
+│                    YOUR COMMAND                              │
+│                                                              │
+│   ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │
+│   │ explore-    │  │ explore-db  │  │ explore-    │         │
+│   │ codebase    │  │             │  │ docs        │         │
+│   │             │  │  (schema,   │  │             │         │
+│   │ (patterns,  │  │   tables,   │  │ (libraries, │         │
+│   │  existing   │  │   RLS)      │  │  APIs)      │         │
+│   │  code)      │  │             │  │             │         │
+│   └──────┬──────┘  └──────┬──────┘  └──────┬──────┘         │
+│          │                │                │                 │
+│          └────────────────┼────────────────┘                 │
+│                           ▼                                  │
+│              Complete context in seconds                     │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-- **Plus rapide** : 3 agents en parallele vs exploration sequentielle
-- **Meilleurs resultats** : contexte complet avant toute action
-- **Configurable** : ajoutez vos propres agents dans `.claude/agents/`
+- **Faster**: 3 agents in parallel vs sequential exploration
+- **Better results**: complete context before any action
+- **Configurable**: add your own agents in `.claude/agents/`
 
-Le mode plan par defaut de Claude utilise ses propres agents internes, plus lents et non modifiables. Avec cette config, vous controlez exactement ce que Claude explore.
+Claude's default plan mode uses its own internal agents, slower and not modifiable. With this config, you control exactly what Claude explores.
 
-### 5. Resume
+### 5. Summary
 
 ```bash
-# 1. Planifier la feature
+# 1. Plan the feature
 /plan-feature name="user-auth"
 
-# 2. Dev phase par phase (nouveau chat a chaque fois)
+# 2. Dev phase by phase (new chat each time)
 /dev spec="USER_AUTH_FEATURE.md" phase="1"
 # → /clear
 
 /dev spec="USER_AUTH_FEATURE.md" phase="2" done="1"
 # → /clear
 
-# 3. Review finale
+# 3. Final review
 /review spec="USER_AUTH_FEATURE.md"
 
 # 4. Commit
 /commits
 ```
 
-Le but est de tendre facilement vers du **code de production**. La configuration est minimale, mais les resultats sont consistants.
+The goal is to easily achieve **production-grade code**. The configuration is minimal, but results are consistent.
 
 ---
 
-## Table des matières
+## Table of Contents
 
 - [Quick Start](#quick-start)
-- [Structure du Repository](#structure-du-repository)
-- [CLAUDE.md - Le fichier de Guidelines](#claudemd---le-fichier-de-guidelines)
+- [Repository Structure](#repository-structure)
+- [CLAUDE.md - The Guidelines File](#claudemd---the-guidelines-file)
 - [Agents](#agents)
   - [explore-codebase](#explore-codebase)
   - [explore-db](#explore-db)
@@ -180,7 +180,7 @@ Le but est de tendre facilement vers du **code de production**. La configuration
   - [websearch](#websearch)
   - [backend-code-optimizer](#backend-code-optimizer)
   - [frontend-code-reviewer](#frontend-code-reviewer)
-- [Best Practices - Ma Methodologie](#best-practices---ma-methodologie)
+- [Best Practices - My Methodology](#best-practices---my-methodology)
 - [Commands](#commands)
   - [commits](#commits)
   - [dev](#dev)
@@ -190,9 +190,9 @@ Le but est de tendre facilement vers du **code de production**. La configuration
   - [plan-feature](#plan-feature)
   - [review](#review)
 - [Settings & Hooks](#settings--hooks)
-- [Systeme Audio](#systeme-audio)
-- [Personnalisation pour Votre Stack](#personnalisation-pour-votre-stack)
-- [Philosophie & Design Patterns](#philosophie--design-patterns)
+- [Audio System](#audio-system)
+- [Customization for Your Stack](#customization-for-your-stack)
+- [Philosophy & Design Patterns](#philosophy--design-patterns)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 - [License](#license)
@@ -201,131 +201,131 @@ Le but est de tendre facilement vers du **code de production**. La configuration
 
 ## Quick Start
 
-### Prerequis
+### Prerequisites
 
-- [Claude Code](https://code.claude.com/docs/en/overview) installe et configure
-- Un projet existant ou nouveau
-- (Optionnel) Pour les notifications audio : macOS avec `afplay`, ou equivalent Linux/Windows
+- [Claude Code](https://code.claude.com/docs/en/overview) installed and configured
+- An existing or new project
+- (Optional) For audio notifications: macOS with `afplay`, or Linux/Windows equivalent
 
 ### Installation
 
-1. **Clonez ce repository** dans votre projet ou copiez le dossier `.claude/` :
+1. **Clone this repository** into your project or copy the `.claude/` folder:
 
 ```bash
-# Option 1: Cloner le repo entier
+# Option 1: Clone the entire repo
 git clone https://github.com/Aurealibe/claude-config.git
-cp -r claude-config/.claude/ votre-projet/.claude/
-cp claude-config/CLAUDE.md votre-projet/CLAUDE.md
+cp -r claude-config/.claude/ your-project/.claude/
+cp claude-config/CLAUDE.md your-project/CLAUDE.md
 
-# Option 2: Ajouter comme submodule (pour garder les mises a jour)
-cd votre-projet
+# Option 2: Add as submodule (to keep updates)
+cd your-project
 git submodule add https://github.com/Aurealibe/claude-config.git .claude-config
 ln -s .claude-config/.claude .claude
 ln -s .claude-config/CLAUDE.md CLAUDE.md
 ```
 
-2. **Configurez les chemins audio** dans `.claude/settings.json` :
+2. **Configure audio paths** in `.claude/settings.json`:
 
 ```json
 {
   "hooks": {
     "Stop": [{
-      "command": "afplay /chemin/vers/votre/projet/.claude/song/finish.mp3 &"
+      "command": "afplay /path/to/your/project/.claude/song/finish.mp3 &"
     }],
     "Notification": [{
       "matcher": "idle_prompt",
-      "command": "afplay /chemin/vers/votre/projet/.claude/song/need-human.mp3 &"
+      "command": "afplay /path/to/your/project/.claude/song/need-human.mp3 &"
     }]
   }
 }
 ```
 
-3. **Personnalisez `CLAUDE.md`** pour votre stack (voir [Personnalisation](#personnalisation-pour-votre-stack))
+3. **Customize `CLAUDE.md`** for your stack (see [Customization](#customization-for-your-stack))
 
-### Premier usage
+### First Use
 
 ```bash
-# Lancez Claude Code dans votre projet
-cd votre-projet
+# Launch Claude Code in your project
+cd your-project
 claude
 
-# Testez une commande
-> /explore question="Comment fonctionne l'authentification dans ce projet ?"
+# Test a command
+> /explore question="How does authentication work in this project?"
 
-# Ou lancez un dev workflow
-> /dev spec="specs/ma-feature.md" phase="1"
+# Or launch a dev workflow
+> /dev spec="specs/my-feature.md" phase="1"
 ```
 
 ---
 
-## Structure du Repository
+## Repository Structure
 
 ```
 claude-config/
-├── .claude/                    # Configuration Claude Code
-│   ├── agents/                 # 6 agents specialises
-│   │   ├── explore-codebase.md # Recherche dans le code source
-│   │   ├── explore-db.md       # Exploration base de donnees Supabase
-│   │   ├── explore-docs.md     # Documentation des librairies
-│   │   ├── websearch.md        # Recherche web rapide
-│   │   ├── backend-code-optimizer.md # Optimisation code Go
-│   │   └── frontend-code-reviewer.md # Revue code React/TypeScript
+├── .claude/                    # Claude Code configuration
+│   ├── agents/                 # 6 specialized agents
+│   │   ├── explore-codebase.md # Search in source code
+│   │   ├── explore-db.md       # Supabase database exploration
+│   │   ├── explore-docs.md     # Library documentation
+│   │   ├── websearch.md        # Quick web search
+│   │   ├── backend-code-optimizer.md # Go code optimization
+│   │   └── frontend-code-reviewer.md # React/TypeScript code review
 │   │
-│   ├── commands/               # 7 commandes de workflow
-│   │   ├── commits.md          # Git commit automatique (Conventional Commits)
-│   │   ├── dev.md              # Developpement par phases
-│   │   ├── explore.md          # Investigation profonde
-│   │   ├── hotfix.md           # Correction de bugs
-│   │   ├── oneshot.md          # Implementation rapide
-│   │   ├── plan-feature.md     # Planification de feature complete
-│   │   └── review.md           # Revue de code automatisee
+│   ├── commands/               # 7 workflow commands
+│   │   ├── commits.md          # Automatic git commit (Conventional Commits)
+│   │   ├── dev.md              # Phase-based development
+│   │   ├── explore.md          # Deep investigation
+│   │   ├── hotfix.md           # Bug fixes
+│   │   ├── oneshot.md          # Quick implementation
+│   │   ├── plan-feature.md     # Complete feature planning
+│   │   └── review.md           # Automated code review
 │   │
-│   ├── song/                   # Fichiers audio pour notifications
-│   │   ├── finish.mp3          # Joue quand une tache est terminee
-│   │   └── need-human.mp3      # Joue quand Claude attend votre input
+│   ├── song/                   # Audio files for notifications
+│   │   ├── finish.mp3          # Plays when a task is completed
+│   │   └── need-human.mp3      # Plays when Claude waits for your input
 │   │
-│   └── settings.json           # Configuration des hooks Claude Code
+│   └── settings.json           # Claude Code hooks configuration
 │
-├── CLAUDE.md                   # Guidelines de developpement (instructions pour Claude)
+├── CLAUDE.md                   # Development guidelines (instructions for Claude)
 ├── LICENSE                     # MIT License
-└── README.md                   # Ce fichier
+└── README.md                   # This file
 ```
 
-### Explication de chaque element
+### Explanation of Each Element
 
-| Fichier/Dossier | Role |
-|-----------------|------|
-| `.claude/agents/` | Agents specialises lances en parallele pour collecter du contexte rapidement |
-| `.claude/commands/` | Commandes invocables avec `/nom` qui orchestrent des workflows complets |
-| `.claude/song/` | Sons de notification pour feedback audio |
-| `.claude/settings.json` | Hooks qui declenchent des actions sur certains evenements |
-| `CLAUDE.md` | Instructions que Claude lit au demarrage - definit vos conventions et patterns |
+| File/Folder | Role |
+|-------------|------|
+| `.claude/agents/` | Specialized agents launched in parallel to collect context quickly |
+| `.claude/commands/` | Commands invocable with `/name` that orchestrate complete workflows |
+| `.claude/song/` | Notification sounds for audio feedback |
+| `.claude/settings.json` | Hooks that trigger actions on certain events |
+| `CLAUDE.md` | Instructions that Claude reads at startup - defines your conventions and patterns |
 
 ---
 
-## CLAUDE.md - Le fichier de Guidelines
+## CLAUDE.md - The Guidelines File
 
-Le fichier `CLAUDE.md` a la racine de votre projet est **lu automatiquement par Claude Code** au demarrage. C'est votre moyen de definir :
+The `CLAUDE.md` file at the root of your project is **automatically read by Claude Code** at startup. It's your way to define:
 
-- Les conventions de votre projet
-- L'architecture a respecter
-- Les patterns a reutiliser
-- Les regles strictes (securite, i18n, etc.)
+- Your project conventions
+- Architecture to follow
+- Patterns to reuse
+- Strict rules (security, i18n, etc.)
 
-### Structure du CLAUDE.md fourni
+### Structure of the Provided CLAUDE.md
 
 ```markdown
-# Sections principales
+# Main sections
 
-1. Project Overview       → Stack technique, IDs de projet
-2. Development Principles → Regles fondamentales (DB, reuse, clean code, etc.)
-3. Core Architecture      → Layers backend, patterns frontend
-4. Development Process    → Workflow avant implementation
-5. Naming Conventions     → Standards de nommage
-6. Common Commands        → Commandes utiles
+1. Project Overview       → Tech stack, project IDs
+2. Development Principles → Fundamental rules (DB, reuse, clean code, etc.)
+3. Core Architecture      → Backend layers, frontend patterns
+4. Development Process    → Pre-implementation workflow
+5. Naming Conventions     → Naming standards
+6. Common Commands        → Useful commands
 ```
 
-### Section par section
+### Section by Section
 
 #### 1. Project Overview
 
@@ -340,14 +340,14 @@ Le fichier `CLAUDE.md` a la racine de votre projet est **lu automatiquement par 
 - **Infrastructure**: Docker
 ```
 
-**Comment personnaliser :**
+**How to customize:**
 
-Remplacez par votre stack. Par exemple pour Vue + Python :
+Replace with your stack. For example for Vue + Python:
 
 ```markdown
 ## Project Overview
 
-**MonProjet** - Stack Vue.js + Python.
+**MyProject** - Vue.js + Python stack.
 
 - **Frontend**: Vue 3 (Composition API), TypeScript, TailwindCSS, Pinia
 - **Backend**: Python, FastAPI, Clean Architecture
@@ -357,28 +357,28 @@ Remplacez par votre stack. Par exemple pour Vue + Python :
 
 #### 2. Fundamental Development Principles
 
-Ces principes sont **universels** et applicables a toute stack :
+These principles are **universal** and applicable to any stack:
 
-| Principe | Explication | Pourquoi c'est important |
-|----------|-------------|--------------------------|
-| **Database via MCP** | Utiliser les outils MCP pour les requetes DB | Tracabilite, securite, pas de connexions directes |
-| **Maximum Reuse** | TOUJOURS chercher l'existant avant de creer | Evite la duplication, maintient la coherence |
-| **Dynamic & Modular** | Pas de valeurs hardcodees | Flexibilite, configuration centralisee |
-| **Clean Code** | Pas de code mort, DRY | Maintenabilite |
-| **Error Handling** | Gerer TOUS les cas d'erreur | Robustesse |
-| **Up-to-Date Docs** | Verifier la doc avant d'utiliser une lib | Evite les APIs deprecees |
-| **i18n** | Pas de strings hardcodees | Internationalisation |
-| **Context Propagation** | `context.Context` en Go | Tracing, cancellation, timeouts |
+| Principle | Explanation | Why it matters |
+|-----------|-------------|----------------|
+| **Database via MCP** | Use MCP tools for DB queries | Traceability, security, no direct connections |
+| **Maximum Reuse** | ALWAYS search for existing before creating | Avoids duplication, maintains consistency |
+| **Dynamic & Modular** | No hardcoded values | Flexibility, centralized configuration |
+| **Clean Code** | No dead code, DRY | Maintainability |
+| **Error Handling** | Handle ALL error cases | Robustness |
+| **Up-to-Date Docs** | Check docs before using a lib | Avoids deprecated APIs |
+| **i18n** | No hardcoded strings | Internationalization |
+| **Context Propagation** | `context.Context` in Go | Tracing, cancellation, timeouts |
 
 #### 3. Core Architecture
 
-L'exemple fourni utilise **Clean Architecture** avec 4 layers :
+The provided example uses **Clean Architecture** with 4 layers:
 
 ```
 Domain → Application → Infrastructure → Presentation
 ```
 
-**Adaptable a toute stack :**
+**Adaptable to any stack:**
 
 | Layer | Go (Fiber) | Python (FastAPI) | Node.js (NestJS) | Rust (Axum) |
 |-------|------------|------------------|------------------|-------------|
@@ -391,34 +391,34 @@ Domain → Application → Infrastructure → Presentation
 
 ## Agents
 
-Les agents sont des **sous-processus specialises** que Claude peut lancer en parallele pour collecter du contexte rapidement. Ils sont **read-only** (ne modifient rien) et retournent un rapport structure.
+Agents are **specialized sub-processes** that Claude can launch in parallel to collect context quickly. They are **read-only** (don't modify anything) and return a structured report.
 
-### Comment les agents fonctionnent
+### How Agents Work
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    CLAUDE (Principal)                        │
+│                    CLAUDE (Main)                             │
 │                                                              │
-│  "Je dois comprendre comment fonctionne l'auth..."          │
+│  "I need to understand how auth works..."                   │
 │                                                              │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐       │
 │  │ explore-     │  │ explore-db   │  │ explore-     │       │
 │  │ codebase     │  │              │  │ docs         │       │
 │  │              │  │ "Tables      │  │              │       │
-│  │ "Cherche     │  │  users,      │  │ "Doc JWT,    │       │
-│  │  auth dans   │  │  sessions"   │  │  Fiber       │       │
+│  │ "Search      │  │  users,      │  │ "JWT docs,   │       │
+│  │  auth in     │  │  sessions"   │  │  Fiber       │       │
 │  │  backend/"   │  │              │  │  middleware" │       │
 │  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘       │
 │         │                 │                 │                │
 │         ▼                 ▼                 ▼                │
 │  ┌──────────────────────────────────────────────────┐       │
-│  │              RESULTATS COMBINES                   │       │
-│  │  - 15 fichiers Go avec auth                      │       │
-│  │  - Schema tables users/sessions                   │       │
-│  │  - Patterns JWT Fiber v2                          │       │
+│  │              COMBINED RESULTS                     │       │
+│  │  - 15 Go files with auth                         │       │
+│  │  - Schema for users/sessions tables              │       │
+│  │  - JWT Fiber v2 patterns                         │       │
 │  └──────────────────────────────────────────────────┘       │
 │                                                              │
-│  → Claude a maintenant le contexte complet pour agir        │
+│  → Claude now has full context to act                       │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -426,146 +426,146 @@ Les agents sont des **sous-processus specialises** que Claude peut lancer en par
 
 ### explore-codebase
 
-**But :** Trouver du code existant, des patterns, des dependances dans votre projet.
+**Purpose:** Find existing code, patterns, and dependencies in your project.
 
-| Propriete | Valeur |
-|-----------|--------|
-| **Fichier** | `.claude/agents/explore-codebase.md` |
-| **Modele** | Haiku (leger, rapide) |
-| **Outils** | `Read`, `Grep`, `Glob` |
+| Property | Value |
+|----------|-------|
+| **File** | `.claude/agents/explore-codebase.md` |
+| **Model** | Haiku (lightweight, fast) |
+| **Tools** | `Read`, `Grep`, `Glob` |
 | **Mode** | Read-only |
 
-#### Strategie de recherche
+#### Search Strategy
 
-1. **Recherche large** - Grep pour trouver les points d'entree
-2. **Recherches paralleles** - Mots-cles lies en meme temps
-3. **Lecture complete** - Fichiers entiers avec contexte
-4. **Suivi des imports** - Decouverte des dependances
+1. **Broad search** - Grep to find entry points
+2. **Parallel searches** - Related keywords simultaneously
+3. **Full read** - Complete files with context
+4. **Follow imports** - Dependency discovery
 
-#### Ce qu'il trouve
+#### What It Finds
 
-- Fonctions/classes/composants similaires existants
-- Patterns etablis dans le projet
-- Fichiers de configuration
-- Schemas de base de donnees
-- Endpoints API
-- Tests et exemples d'utilisation
-- Fonctions utilitaires reutilisables
+- Similar existing functions/classes/components
+- Established patterns in the project
+- Configuration files
+- Database schemas
+- API endpoints
+- Tests and usage examples
+- Reusable utility functions
 
-#### Format de sortie
+#### Output Format
 
 ```markdown
-## Resultats de l'exploration
+## Exploration Results
 
-### Fichiers pertinents
-- `backend/internal/auth/jwt.go:45` - Middleware JWT existant
-- `backend/internal/auth/session.go:12` - Gestion des sessions
+### Relevant Files
+- `backend/internal/auth/jwt.go:45` - Existing JWT middleware
+- `backend/internal/auth/session.go:12` - Session management
 
-### Patterns identifies
-- Pattern Repository utilise pour tous les acces DB
+### Identified Patterns
+- Repository pattern used for all DB access
 - Middleware chain: Logger → Auth → RateLimit → Handler
 
-### Code reutilisable
+### Reusable Code
 ```go
 // backend/internal/auth/jwt.go:45-67
 func ValidateToken(ctx context.Context, token string) (*Claims, error) {
-    // ... implementation existante
+    // ... existing implementation
 }
 ```
 
-### Dependances
-- `github.com/golang-jwt/jwt/v5` - Librairie JWT
+### Dependencies
+- `github.com/golang-jwt/jwt/v5` - JWT library
 - `backend/internal/config` - Configuration
 ```
 
-#### Exemple d'utilisation
+#### Usage Example
 
-Quand la commande `/explore` ou `/dev` est lancee, cet agent est automatiquement invoque :
+When the `/explore` or `/dev` command is launched, this agent is automatically invoked:
 
 ```
-Claude: "Je lance explore-codebase pour chercher les patterns d'auth..."
+Claude: "I'm launching explore-codebase to search for auth patterns..."
 
 Agent explore-codebase:
-→ Grep "auth" dans backend/
-→ Grep "middleware" dans backend/
-→ Grep "jwt" dans backend/
-→ Lecture complete des fichiers trouves
-→ Suivi des imports
+→ Grep "auth" in backend/
+→ Grep "middleware" in backend/
+→ Grep "jwt" in backend/
+→ Full read of found files
+→ Follow imports
 
-Retour: "Trouve 8 fichiers, pattern middleware etabli, JWT deja implemente..."
+Return: "Found 8 files, established middleware pattern, JWT already implemented..."
 ```
 
 ---
 
 ### explore-db
 
-**But :** Explorer le schema de base de donnees Supabase (PostgreSQL).
+**Purpose:** Explore the Supabase database schema (PostgreSQL).
 
-| Propriete | Valeur |
-|-----------|--------|
-| **Fichier** | `.claude/agents/explore-db.md` |
-| **Modele** | Haiku |
-| **Outils** | MCP Supabase (`list_tables`, `execute_sql`, etc.) |
-| **Mode** | Read-only (SELECT uniquement) |
+| Property | Value |
+|----------|-------|
+| **File** | `.claude/agents/explore-db.md` |
+| **Model** | Haiku |
+| **Tools** | MCP Supabase (`list_tables`, `execute_sql`, etc.) |
+| **Mode** | Read-only (SELECT only) |
 
-#### Detection d'environnement
+#### Environment Detection
 
-L'agent detecte automatiquement l'environnement depuis votre prompt :
+The agent automatically detects the environment from your prompt:
 
 ```
-"Explore la DB dev" → Utilise mcp__supabase-dev__*
-"Explore la DB prod" → Utilise mcp__supabase-prod__*
-(par defaut) → Utilise dev
+"Explore the dev DB" → Uses mcp__supabase-dev__*
+"Explore the prod DB" → Uses mcp__supabase-prod__*
+(default) → Uses dev
 ```
 
-#### Outils MCP disponibles
+#### Available MCP Tools
 
-| Outil | Usage |
-|-------|-------|
-| `list_tables` | Liste toutes les tables avec colonnes |
-| `list_extensions` | Extensions PostgreSQL actives |
-| `list_migrations` | Historique des migrations |
-| `execute_sql` | Requetes SELECT (read-only) |
-| `get_advisors` | Alertes securite/performance |
+| Tool | Usage |
+|------|-------|
+| `list_tables` | List all tables with columns |
+| `list_extensions` | Active PostgreSQL extensions |
+| `list_migrations` | Migration history |
+| `execute_sql` | SELECT queries (read-only) |
+| `get_advisors` | Security/performance alerts |
 
-#### Strategie de recherche
+#### Search Strategy
 
-1. `list_tables` pour comprendre le schema global
-2. `execute_sql` pour requetes ciblees sur les tables pertinentes
-3. `get_advisors` pour identifier les problemes
-4. Tracer les foreign keys pour comprendre les relations
+1. `list_tables` to understand the global schema
+2. `execute_sql` for targeted queries on relevant tables
+3. `get_advisors` to identify issues
+4. Trace foreign keys to understand relationships
 
-#### Ce qu'il trouve
+#### What It Finds
 
-- Structure des tables et colonnes
-- Relations foreign key
-- Index et contraintes
-- Politiques RLS (Row Level Security)
-- Nombre de lignes et echantillons de donnees
-- Diagrammes de relations
+- Table and column structure
+- Foreign key relationships
+- Indexes and constraints
+- RLS (Row Level Security) policies
+- Row counts and data samples
+- Relationship diagrams
 
-#### Format de sortie
+#### Output Format
 
 ```markdown
-## Schema Database
+## Database Schema
 
-### Tables pertinentes
+### Relevant Tables
 
 #### users
-| Colonne | Type | Contraintes |
-|---------|------|-------------|
+| Column | Type | Constraints |
+|--------|------|-------------|
 | id | uuid | PRIMARY KEY |
 | email | text | UNIQUE, NOT NULL |
 | created_at | timestamptz | DEFAULT now() |
 
 #### sessions
-| Colonne | Type | Contraintes |
-|---------|------|-------------|
+| Column | Type | Constraints |
+|--------|------|-------------|
 | id | uuid | PRIMARY KEY |
 | user_id | uuid | REFERENCES users(id) |
 | expires_at | timestamptz | NOT NULL |
 
-### Relations
+### Relationships
 ```
 users 1 ──── * sessions
       │
@@ -573,17 +573,17 @@ users 1 ──── * sessions
 ```
 
 ### RLS Policies
-- `users_select_own`: Users ne peuvent voir que leur propre ligne
-- `sessions_user_only`: Sessions filtrees par user_id = auth.uid()
+- `users_select_own`: Users can only see their own row
+- `sessions_user_only`: Sessions filtered by user_id = auth.uid()
 
 ### Advisories
-⚠️ Table `logs` n'a pas d'index sur `created_at` (queries lentes)
+⚠️ Table `logs` has no index on `created_at` (slow queries)
 ```
 
-#### Exemple d'utilisation
+#### Usage Example
 
 ```
-Claude: "Je lance explore-db pour comprendre le schema des utilisateurs..."
+Claude: "I'm launching explore-db to understand the user schema..."
 
 Agent explore-db:
 → list_tables
@@ -591,56 +591,56 @@ Agent explore-db:
 → execute_sql: SELECT * FROM pg_policies WHERE tablename = 'users'
 → get_advisors
 
-Retour: "Tables users, sessions, profiles. Relations etablies. RLS configure..."
+Return: "Tables users, sessions, profiles. Relationships established. RLS configured..."
 ```
 
 ---
 
 ### explore-docs
 
-**But :** Recuperer la documentation a jour des librairies et frameworks.
+**Purpose:** Retrieve up-to-date documentation for libraries and frameworks.
 
-| Propriete | Valeur |
-|-----------|--------|
-| **Fichier** | `.claude/agents/explore-docs.md` |
-| **Modele** | Haiku |
-| **Outils** | Context7 (MCP), WebSearch, WebFetch |
+| Property | Value |
+|----------|-------|
+| **File** | `.claude/agents/explore-docs.md` |
+| **Model** | Haiku |
+| **Tools** | Context7 (MCP), WebSearch, WebFetch |
 | **Mode** | Read-only |
 
-#### Priorite de recherche
+#### Search Priority
 
 ```
-1. Context7 (prioritaire)
+1. Context7 (priority)
    └── resolve-library-id → query-docs
 
 2. Fallback: WebSearch + WebFetch
-   └── Pour libs non indexees dans Context7
+   └── For libs not indexed in Context7
 ```
 
-#### Pourquoi Context7 en priorite ?
+#### Why Context7 First?
 
-Context7 est un service qui indexe la documentation des librairies populaires. Avantages :
+Context7 is a service that indexes documentation for popular libraries. Advantages:
 
-- Documentation structuree et a jour
-- Exemples de code extraits
-- Pas de bruit (pas de marketing, pas de blogs)
-- Reponses precises
+- Structured and up-to-date documentation
+- Extracted code examples
+- No noise (no marketing, no blogs)
+- Precise responses
 
-#### Ce qu'il filtre
+#### What It Filters
 
-**Garde :**
-- Exemples de code et patterns d'usage
-- Specifications d'API et signatures
-- Options de configuration
-- Patterns de gestion d'erreur
-- Bonnes pratiques
+**Keeps:**
+- Code examples and usage patterns
+- API specifications and signatures
+- Configuration options
+- Error handling patterns
+- Best practices
 
-**Elimine :**
-- Contenu marketing
-- Explications redondantes
-- Informations deprecees
+**Removes:**
+- Marketing content
+- Redundant explanations
+- Deprecated information
 
-#### Format de sortie
+#### Output Format
 
 ```markdown
 ## Documentation: React Query v5
@@ -669,70 +669,70 @@ const mutation = useMutation({
 })
 ```
 
-### Points cles
-- `onMutate` pour optimistic update
-- Retourner le context pour rollback
-- `onError` pour restaurer l'etat precedent
+### Key Points
+- `onMutate` for optimistic update
+- Return context for rollback
+- `onError` to restore previous state
 
 ### Source
 Context7: /tanstack/query
 ```
 
-#### Exemple d'utilisation
+#### Usage Example
 
 ```
-Claude: "Je lance explore-docs pour la doc React Query optimistic updates..."
+Claude: "I'm launching explore-docs for React Query optimistic updates docs..."
 
 Agent explore-docs:
 → resolve-library-id("tanstack-query")
 → query-docs("/tanstack/query", "useMutation optimistic updates")
 
-Retour: "Pattern optimistic update avec onMutate, rollback sur erreur..."
+Return: "Optimistic update pattern with onMutate, rollback on error..."
 ```
 
 ---
 
 ### websearch
 
-**But :** Recherche web rapide pour questions techniques, librairies, APIs.
+**Purpose:** Quick web search for technical questions, libraries, APIs.
 
-| Propriete | Valeur |
-|-----------|--------|
-| **Fichier** | `.claude/agents/websearch.md` |
-| **Modele** | Haiku |
-| **Outils** | `WebSearch`, `WebFetch` |
+| Property | Value |
+|----------|-------|
+| **File** | `.claude/agents/websearch.md` |
+| **Model** | Haiku |
+| **Tools** | `WebSearch`, `WebFetch` |
 | **Mode** | Read-only |
 
 #### Workflow
 
-1. **WebSearch** avec mots-cles precis
-2. **WebFetch** sur les resultats les plus pertinents
-3. **Resume** des informations cles
+1. **WebSearch** with precise keywords
+2. **WebFetch** on the most relevant results
+3. **Summary** of key information
 
-#### Quand l'utiliser vs explore-docs
+#### When to Use vs explore-docs
 
-| Cas | Agent a utiliser |
-|-----|------------------|
-| Doc React Query | explore-docs (Context7) |
-| Doc Stripe API | websearch (API externe) |
+| Case | Agent to use |
+|------|--------------|
+| React Query docs | explore-docs (Context7) |
+| Stripe API docs | websearch (external API) |
 | "Best practices auth 2025" | websearch |
-| Doc Next.js App Router | explore-docs (Context7) |
-| Erreur specifique rare | websearch |
+| Next.js App Router docs | explore-docs (Context7) |
+| Specific rare error | websearch |
 
-#### Format de sortie
+#### Output Format
 
 ```markdown
-## Resultats: Stripe Webhook Verification 2025
+## Results: Stripe Webhook Verification 2025
 
-### Resume
-Stripe recommande de verifier les webhooks avec `stripe.webhooks.constructEvent()`.
+### Summary
+Stripe recommends verifying webhooks with `stripe.webhooks.constructEvent()`.
 
-### Points cles
-- Toujours verifier la signature
-- Utiliser le raw body (pas parse)
-- Secret webhook different par environnement
+### Key Points
+- Always verify the signature
+- Use raw body (not parsed)
+- Different webhook secret per environment
 
-### Exemple
+### Example
 ```javascript
 const event = stripe.webhooks.constructEvent(
   req.rawBody,
@@ -750,104 +750,104 @@ const event = stripe.webhooks.constructEvent(
 
 ### backend-code-optimizer
 
-**But :** Analyser et optimiser le code backend Go pour la qualité, les performances et l'adhérence à Clean Architecture.
+**Purpose:** Analyze and optimize Go backend code for quality, performance, and Clean Architecture adherence.
 
-| Propriete | Valeur |
-|-----------|--------|
-| **Fichier** | `.claude/agents/backend-code-optimizer.md` |
-| **Modele** | Opus (plus capable) |
-| **Outils** | `Read`, `Grep`, `Glob` |
+| Property | Value |
+|----------|-------|
+| **File** | `.claude/agents/backend-code-optimizer.md` |
+| **Model** | Opus (more capable) |
+| **Tools** | `Read`, `Grep`, `Glob` |
 | **Mode** | Read-only |
 
-#### Ce qu'il analyse
+#### What It Analyzes
 
-- Duplication de code et logique redondante
-- Fonctions et variables inutilisées
-- Violations des principes Clean Architecture
-- Opportunités de parallélisation avec goroutines
-- Inefficacités de performance
-- Simplifications possibles (nesting profond, logique complexe)
+- Code duplication and redundant logic
+- Unused functions and variables
+- Clean Architecture principle violations
+- Parallelization opportunities with goroutines
+- Performance inefficiencies
+- Possible simplifications (deep nesting, complex logic)
 
-#### Ce qu'il produit
+#### What It Produces
 
 ```markdown
-## Analyse de qualité - Backend
+## Quality Analysis - Backend
 
-### Issues Critiques (à corriger immédiatement)
-- `backend/internal/services/user.go:45` - Violation Clean Architecture
-- `backend/internal/repositories/cache.go:78` - Fuite mémoire goroutine
+### Critical Issues (fix immediately)
+- `backend/internal/services/user.go:45` - Clean Architecture violation
+- `backend/internal/repositories/cache.go:78` - Goroutine memory leak
 
-### Issues Importantes (devraient être corrigées)
-- `backend/cmd/main.go:12` - 5 paramètres hardcodés
+### Important Issues (should be fixed)
+- `backend/cmd/main.go:12` - 5 hardcoded parameters
 
-### Nice-to-have (optionnel)
-- `backend/internal/domain/user.go:23` - Simplification possible
+### Nice-to-have (optional)
+- `backend/internal/domain/user.go:23` - Possible simplification
 ```
 
 #### Usage
 
-Cet agent est lancé automatiquement par la commande `/review` quand du code backend est modifié.
+This agent is automatically launched by the `/review` command when backend code is modified.
 
 ---
 
 ### frontend-code-reviewer
 
-**But :** Analyser et optimiser le code frontend React/TypeScript/Next.js pour la qualité et les performances.
+**Purpose:** Analyze and optimize React/TypeScript/Next.js frontend code for quality and performance.
 
-| Propriete | Valeur |
-|-----------|--------|
-| **Fichier** | `.claude/agents/frontend-code-reviewer.md` |
-| **Modele** | Opus |
-| **Outils** | `Read`, `Grep`, `Glob` |
+| Property | Value |
+|----------|-------|
+| **File** | `.claude/agents/frontend-code-reviewer.md` |
+| **Model** | Opus |
+| **Tools** | `Read`, `Grep`, `Glob` |
 | **Mode** | Read-only |
 
-#### Ce qu'il analyse
+#### What It Analyzes
 
-- Bonnes pratiques React (composition, hooks, rendu)
-- Sécurité TypeScript (any types, génériques, union discriminées)
-- Optimisation Next.js (server/client components, data fetching)
-- Performances (bundle size, lazy loading, code splitting)
-- Architecture CSS et accessibilité
-- Opportunités de simplification
+- React best practices (composition, hooks, rendering)
+- TypeScript safety (any types, generics, discriminated unions)
+- Next.js optimization (server/client components, data fetching)
+- Performance (bundle size, lazy loading, code splitting)
+- CSS architecture and accessibility
+- Simplification opportunities
 
-#### Ce qu'il produit
+#### What It Produces
 
 ```markdown
-## Analyse de qualité - Frontend
+## Quality Analysis - Frontend
 
-### Issues Critiques
-- `frontend/src/pages/dashboard.tsx:12` - 3 useState qui devraient être un useReducer
-- `frontend/src/components/Form.tsx:45` - Prop drilling excessif
+### Critical Issues
+- `frontend/src/pages/dashboard.tsx:12` - 3 useState that should be a useReducer
+- `frontend/src/components/Form.tsx:45` - Excessive prop drilling
 
-### Issues Importantes
+### Important Issues
 - `frontend/src/hooks/useApi.ts:23` - Missing error boundary
-- `frontend/src/components/Card.tsx:78` - Type 'any' utilisé
+- `frontend/src/components/Card.tsx:78` - Type 'any' used
 
-### Optimisations de performance
-- Bundle size: 245KB → 189KB (lazy loading des modales)
-- Unnecessary re-renders détectés dans ProductList
+### Performance Optimizations
+- Bundle size: 245KB → 189KB (lazy loading modals)
+- Unnecessary re-renders detected in ProductList
 
-### Simplifications recommandées
-- Lines 45-67 peuvent être condensées avec une custom hook
+### Recommended Simplifications
+- Lines 45-67 can be condensed with a custom hook
 ```
 
 #### Usage
 
-Cet agent est lancé automatiquement par la commande `/review` quand du code frontend est modifié.
+This agent is automatically launched by the `/review` command when frontend code is modified.
 
 ---
 
 ## Commands
 
-Les commandes sont des **workflows complets** invocables avec `/nom`. Elles orchestrent les agents et suivent un cycle structure.
+Commands are **complete workflows** invocable with `/name`. They orchestrate agents and follow a structured cycle.
 
-### Cycle commun a toutes les commandes
+### Cycle Common to All Commands
 
 ```
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
 │   EXPLORE   │ ──▶ │    PLAN     │ ──▶ │  VALIDATE   │
-│  (Agents    │     │  (Analyse   │     │  (Approval  │
-│   en //)    │     │   + plan)   │     │   user)     │
+│  (Agents    │     │  (Analysis  │     │  (User      │
+│   in //)    │     │   + plan)   │     │   approval) │
 └─────────────┘     └─────────────┘     └──────┬──────┘
                                                │
                     ┌─────────────┐     ┌──────▼──────┐
@@ -861,39 +861,39 @@ Les commandes sont des **workflows complets** invocables avec `/nom`. Elles orch
 
 ### commits
 
-**Commande :** `/commits`
+**Command:** `/commits`
 
-**But :** Commit et push automatique en suivant Conventional Commits.
+**Purpose:** Automatic commit and push following Conventional Commits.
 
-| Propriete | Valeur |
-|-----------|--------|
-| **Fichier** | `.claude/commands/commits.md` |
-| **Modele** | Haiku |
-| **Outils autorises** | Bash (git uniquement) |
+| Property | Value |
+|----------|-------|
+| **File** | `.claude/commands/commits.md` |
+| **Model** | Haiku |
+| **Allowed tools** | Bash (git only) |
 
 #### Workflow
 
 1. **Stage** - `git add -A`
-2. **Analyse** - `git diff --cached --stat`
-3. **Message** - Generation selon Conventional Commits
-4. **Push** - `git push` immediat
+2. **Analyze** - `git diff --cached --stat`
+3. **Message** - Generation according to Conventional Commits
+4. **Push** - Immediate `git push`
 
-#### Types de commit et SemVer
+#### Commit Types and SemVer
 
-| Type | Description | Impact SemVer |
+| Type | Description | SemVer Impact |
 |------|-------------|---------------|
-| `feat` | Nouvelle fonctionnalite | MINOR (1.x.0) |
-| `fix` | Correction de bug | PATCH (1.0.x) |
-| `docs` | Documentation | Aucun |
-| `style` | Formatage (pas de logique) | Aucun |
-| `refactor` | Refactoring (pas de feature/fix) | Aucun |
-| `perf` | Amelioration performance | Aucun |
-| `test` | Ajout/correction de tests | Aucun |
-| `build` | Systeme de build | Aucun |
-| `ci` | Configuration CI | Aucun |
-| `chore` | Maintenance | Aucun |
+| `feat` | New feature | MINOR (1.x.0) |
+| `fix` | Bug fix | PATCH (1.0.x) |
+| `docs` | Documentation | None |
+| `style` | Formatting (no logic) | None |
+| `refactor` | Refactoring (no feature/fix) | None |
+| `perf` | Performance improvement | None |
+| `test` | Adding/fixing tests | None |
+| `build` | Build system | None |
+| `ci` | CI configuration | None |
+| `chore` | Maintenance | None |
 
-#### Format du message
+#### Message Format
 
 ```
 <type>[optional scope]: <description>
@@ -903,13 +903,13 @@ Les commandes sont des **workflows complets** invocables avec `/nom`. Elles orch
 [optional footer(s)]
 ```
 
-**Regles :**
-- Sujet : max 50 caracteres
-- Mode imperatif ("Add" pas "Added")
-- Majuscule apres les deux-points
-- Body : wrap a 72 caracteres
+**Rules:**
+- Subject: max 50 characters
+- Imperative mood ("Add" not "Added")
+- Capitalize after colon
+- Body: wrap at 72 characters
 
-#### Exemples
+#### Examples
 
 ```bash
 feat: Add user authentication
@@ -921,13 +921,13 @@ feat!: Change API response format  # Breaking change
 #### Usage
 
 ```bash
-# Dans Claude Code
+# In Claude Code
 > /commits
 
-# Claude va:
+# Claude will:
 # 1. git add -A
-# 2. Analyser les changements
-# 3. Generer: "feat(auth): Add JWT middleware"
+# 2. Analyze changes
+# 3. Generate: "feat(auth): Add JWT middleware"
 # 4. git commit -m "..."
 # 5. git push
 ```
@@ -936,41 +936,41 @@ feat!: Change API response format  # Breaking change
 
 ### dev
 
-**Commande :** `/dev spec="..." phase="..."`
+**Command:** `/dev spec="..." phase="..."`
 
-**But :** Executer une phase de developpement depuis un fichier de spec.
+**Purpose:** Execute a development phase from a spec file.
 
-| Propriete | Valeur |
-|-----------|--------|
-| **Fichier** | `.claude/commands/dev.md` |
-| **Arguments** | `spec` (requis), `phase` (requis), `done` (optionnel) |
+| Property | Value |
+|----------|-------|
+| **File** | `.claude/commands/dev.md` |
+| **Arguments** | `spec` (required), `phase` (required), `done` (optional) |
 
 #### Arguments
 
-| Argument | Description | Exemple |
+| Argument | Description | Example |
 |----------|-------------|---------|
-| `spec` | Chemin vers le fichier .md de spec | `specs/auth-feature.md` |
-| `phase` | Numero(s) de phase a executer | `2` ou `2-3` |
-| `done` | Phases deja completees | `0-1` |
+| `spec` | Path to the .md spec file | `specs/auth-feature.md` |
+| `phase` | Phase number(s) to execute | `2` or `2-3` |
+| `done` | Already completed phases | `0-1` |
 
-#### Workflow (7 etapes)
+#### Workflow (7 steps)
 
-1. **UNDERSTAND** - Lire la spec, identifier le scope (backend/frontend/both)
-2. **EXPLORE** (PARALLELE) - Lancer les agents selon le scope
-3. **POST-EXPLORATION** - Verifier la completude, lancer agents manquants
-4. **SHOW PLAN** - Afficher le plan enrichi avec fichiers et patterns
-5. **VALIDATE** - Demander approbation utilisateur
-6. **IMPLEMENT** - Coder en suivant l'ordre d'architecture
-7. **VERIFY** - Build et verification DB
+1. **UNDERSTAND** - Read spec, identify scope (backend/frontend/both)
+2. **EXPLORE** (PARALLEL) - Launch agents according to scope
+3. **POST-EXPLORATION** - Check completeness, launch missing agents
+4. **SHOW PLAN** - Display enriched plan with files and patterns
+5. **VALIDATE** - Request user approval
+6. **IMPLEMENT** - Code following architecture order
+7. **VERIFY** - Build and DB verification
 
-#### Ordre d'implementation
+#### Implementation Order
 
-**Backend :**
+**Backend:**
 ```
 Domain → Application → Infrastructure → Presentation
 ```
 
-**Frontend :**
+**Frontend:**
 ```
 Types → API → Hooks → Components → Pages
 ```
@@ -978,10 +978,10 @@ Types → API → Hooks → Components → Pages
 #### Usage
 
 ```bash
-# Executer la phase 2 de ma feature
+# Execute phase 2 of my feature
 > /dev spec="KANBAN_FEATURE.md" phase="2"
 
-# Executer les phases 3 et 4
+# Execute phases 3 and 4
 > /dev spec="AUTH_FEATURE.md" phase="3-4" done="1-2"
 ```
 
@@ -989,49 +989,49 @@ Types → API → Hooks → Components → Pages
 
 ### explore
 
-**Commande :** `/explore question="..."`
+**Command:** `/explore question="..."`
 
-**But :** Investigation profonde read-only pour repondre a une question.
+**Purpose:** Deep read-only investigation to answer a question.
 
-| Propriete | Valeur |
-|-----------|--------|
-| **Fichier** | `.claude/commands/explore.md` |
-| **Arguments** | `question` (requis) |
+| Property | Value |
+|----------|-------|
+| **File** | `.claude/commands/explore.md` |
+| **Arguments** | `question` (required) |
 
 #### Workflow
 
-1. **PARSE** - Extraire mots-cles, determiner scope
-2. **CLARIFY** - Si ambigu, demander precision a l'utilisateur
-3. **EXPLORE** (PARALLELE) - Lancer agents pertinents
-4. **POST-EXPLORATION** - Verifier completude
-5. **ANSWER** - Reponse complete avec preuves
+1. **PARSE** - Extract keywords, determine scope
+2. **CLARIFY** - If ambiguous, ask user for clarification
+3. **EXPLORE** (PARALLEL) - Launch relevant agents
+4. **POST-EXPLORATION** - Check completeness
+5. **ANSWER** - Complete response with evidence
 
 #### Ultra Think Strategy
 
-L'agent reflechit a la completude entre chaque etape majeure :
+The agent reflects on completeness between each major step:
 
 ```
-"Est-ce que j'ai explore tous les aspects ?"
-"Y a-t-il des fichiers que j'aurais pu manquer ?"
-"Les resultats sont-ils coherents entre eux ?"
+"Have I explored all aspects?"
+"Are there files I might have missed?"
+"Are the results consistent with each other?"
 ```
 
-#### Format de sortie
+#### Output Format
 
 ```markdown
-## Reponse
+## Answer
 
-[Reponse directe et concise]
+[Direct and concise answer]
 
 ### Evidence
-- `backend/auth/jwt.go:45` - Validation token
+- `backend/auth/jwt.go:45` - Token validation
 - `backend/middleware/auth.go:12` - Middleware chain
 
-### Patterns identifies
-- Repository pattern pour DB
-- Clean Architecture respectee
+### Identified Patterns
+- Repository pattern for DB
+- Clean Architecture respected
 
-### Documentation consultee
+### Documentation Consulted
 - Fiber JWT middleware (Context7)
 
 ### Sources
@@ -1041,161 +1041,161 @@ L'agent reflechit a la completude entre chaque etape majeure :
 #### Usage
 
 ```bash
-> /explore question="Comment fonctionne le systeme de cache dans ce projet ?"
+> /explore question="How does the caching system work in this project?"
 
-> /explore question="Quelles sont les routes API protegees par auth ?"
+> /explore question="What are the API routes protected by auth?"
 
-> /explore question="Comment les erreurs sont-elles gerees cote frontend ?"
+> /explore question="How are errors handled on the frontend?"
 ```
 
 ---
 
 ### hotfix
 
-**Commande :** `/hotfix issue="..."`
+**Command:** `/hotfix issue="..."`
 
-**But :** Corriger des bugs ou modifier des features existantes.
+**Purpose:** Fix bugs or modify existing features.
 
-| Propriete | Valeur |
-|-----------|--------|
-| **Fichier** | `.claude/commands/hotfix.md` |
-| **Modele** | Opus (plus capable) |
-| **Arguments** | `issue` (requis) |
+| Property | Value |
+|----------|-------|
+| **File** | `.claude/commands/hotfix.md` |
+| **Model** | Opus (more capable) |
+| **Arguments** | `issue` (required) |
 
-#### Pourquoi Opus ?
+#### Why Opus?
 
-Les hotfixes necessitent souvent une comprehension profonde du code existant et une analyse fine des edge cases. Opus est plus capable pour ce type de tache.
+Hotfixes often require deep understanding of existing code and fine analysis of edge cases. Opus is more capable for this type of task.
 
-#### Workflow (8 etapes)
+#### Workflow (8 steps)
 
-1. **PARSE ISSUE** - Extraire la zone, le type de bug, les layers affectes
-2. **EXPLORE** (PARALLELE) - Tous les agents pertinents
-3. **POST-EXPLORATION** - Verifier completude
-4. **ANALYZE** - Analyse du bug avec root cause et references file:line
-5. **PLAN** - Strategie de fix avec risques et mitigations
-6. **VALIDATE** - Approbation utilisateur
-7. **IMPLEMENT** - Appliquer le fix (backend first, puis frontend)
-8. **VERIFY** - Build + verification DB
-9. **SUMMARY** - Rapport final
+1. **PARSE ISSUE** - Extract area, bug type, affected layers
+2. **EXPLORE** (PARALLEL) - All relevant agents
+3. **POST-EXPLORATION** - Check completeness
+4. **ANALYZE** - Bug analysis with root cause and file:line references
+5. **PLAN** - Fix strategy with risks and mitigations
+6. **VALIDATE** - User approval
+7. **IMPLEMENT** - Apply fix (backend first, then frontend)
+8. **VERIFY** - Build + DB verification
+9. **SUMMARY** - Final report
 
-#### Format d'analyse
+#### Analysis Format
 
 ```markdown
-## Analyse du bug
+## Bug Analysis
 
 ### Description
-Le middleware JWT ne rafraichit pas le token expire.
+The JWT middleware doesn't refresh expired tokens.
 
 ### Root Cause
-`backend/internal/auth/jwt.go:78` - La verification d'expiration ne tient pas compte du grace period.
+`backend/internal/auth/jwt.go:78` - Expiration check doesn't account for grace period.
 
 ### Impact
-- Users deconnectes brutalement
-- Mauvaise UX
+- Users brutally disconnected
+- Bad UX
 
-### Fix propose
-Ajouter verification du grace period avant rejection.
+### Proposed Fix
+Add grace period check before rejection.
 ```
 
 #### Usage
 
 ```bash
-> /hotfix issue="Les utilisateurs sont deconnectes aleatoirement apres 10 minutes"
+> /hotfix issue="Users are randomly disconnected after 10 minutes"
 
-> /hotfix issue="Le bouton de suppression ne marche pas sur mobile"
+> /hotfix issue="Delete button doesn't work on mobile"
 
-> /hotfix issue="Erreur 500 lors de l'upload de fichiers > 5MB"
+> /hotfix issue="500 error when uploading files > 5MB"
 ```
 
 ---
 
 ### oneshot
 
-**Commande :** `/oneshot task="..."`
+**Command:** `/oneshot task="..."`
 
-**But :** Implementation rapide sans fichier de spec complet.
+**Purpose:** Quick implementation without a full spec file.
 
-| Propriete | Valeur |
-|-----------|--------|
-| **Fichier** | `.claude/commands/oneshot.md` |
-| **Arguments** | `task` (requis) |
+| Property | Value |
+|----------|-------|
+| **File** | `.claude/commands/oneshot.md` |
+| **Arguments** | `task` (required) |
 
-#### Quand l'utiliser
+#### When to Use
 
-- Petites features isolees
-- Prototypes rapides
-- Taches bien definies ne necessitant pas de spec elaboree
+- Small isolated features
+- Quick prototypes
+- Well-defined tasks not requiring elaborate specs
 
-#### Workflow (6 etapes)
+#### Workflow (6 steps)
 
-1. **EXPLORE** (PARALLELE) - Backend/frontend/DB/libs en parallele
-2. **POST-EXPLORATION** - Trouver tous les patterns similaires
-3. **CLARIFY** - Questions si requis (messages d'erreur, defaults, validation)
-4. **PLAN** - Plan detaille avec ordre d'implementation
-5. **VALIDATE** - Approbation
-6. **IMPLEMENT** - Execution avec patterns de l'exploration
+1. **EXPLORE** (PARALLEL) - Backend/frontend/DB/libs in parallel
+2. **POST-EXPLORATION** - Find all similar patterns
+3. **CLARIFY** - Questions if required (error messages, defaults, validation)
+4. **PLAN** - Detailed plan with implementation order
+5. **VALIDATE** - Approval
+6. **IMPLEMENT** - Execution with patterns from exploration
 7. **VERIFY** - Build
 
 #### Usage
 
 ```bash
-> /oneshot task="Ajouter un bouton de logout dans le header"
+> /oneshot task="Add a logout button in the header"
 
-> /oneshot task="Ajouter la pagination sur la liste des produits"
+> /oneshot task="Add pagination on the product list"
 
-> /oneshot task="Afficher le nombre de notifications non lues"
+> /oneshot task="Display the unread notification count"
 ```
 
 ---
 
 ### plan-feature
 
-**Commande :** `/plan-feature name="..."`
+**Command:** `/plan-feature name="..."`
 
-**But :** Creer un plan de developpement complet pour une nouvelle feature.
+**Purpose:** Create a complete development plan for a new feature.
 
-| Propriete | Valeur |
-|-----------|--------|
-| **Fichier** | `.claude/commands/plan-feature.md` |
-| **Arguments** | `name` (requis) |
-| **Output** | `{NAME}_FEATURE.md` a la racine |
+| Property | Value |
+|----------|-------|
+| **File** | `.claude/commands/plan-feature.md` |
+| **Arguments** | `name` (required) |
+| **Output** | `{NAME}_FEATURE.md` at root |
 
-#### Workflow (5 etapes)
+#### Workflow (5 steps)
 
-1. **GATHER REQUIREMENTS** - Description, mockups, regles business, integrations
-2. **CLARIFY DETAILS** - Messages d'erreur, defaults, validation, UX flows, permissions
-3. **EXPLORE** (PARALLELE) - Tous les agents
-4. **POST-EXPLORATION** - Completude
-5. **VALIDATE ARCHITECTURE** - Approbation du plan architectural
-6. **WRITE SPEC FILE** - Ecriture du fichier de spec complet
-7. **DELIVER** - Confirmation et prochaines etapes
+1. **GATHER REQUIREMENTS** - Description, mockups, business rules, integrations
+2. **CLARIFY DETAILS** - Error messages, defaults, validation, UX flows, permissions
+3. **EXPLORE** (PARALLEL) - All agents
+4. **POST-EXPLORATION** - Completeness
+5. **VALIDATE ARCHITECTURE** - Architectural plan approval
+6. **WRITE SPEC FILE** - Write complete spec file
+7. **DELIVER** - Confirmation and next steps
 
-#### Structure du fichier de spec genere
+#### Generated Spec File Structure
 
 ```markdown
 # {FEATURE_NAME}_FEATURE.md
 
 ## Overview
-- Objectif
-- Resume
-- Stack technique
+- Objective
+- Summary
+- Tech stack
 
 ## Context and Motivation
-- Pourquoi cette feature
-- Probleme resolu
+- Why this feature
+- Problem solved
 
 ## Functional Specifications
-- Comportement detaille
+- Detailed behavior
 - Edge cases
 
 ## Technical Architecture
-- Fichiers a creer/modifier
-- Diagrammes
+- Files to create/modify
+- Diagrams
 
 ## Database
 - Migrations
-- Colonnes
-- Politiques RLS
+- Columns
+- RLS policies
 
 ## Backend Implementation
 - Phase 1: Domain
@@ -1214,146 +1214,146 @@ Ajouter verification du grace period avant rejection.
 - [ ] Phase 2: ...
 
 ## Important Notes
-- Compatibilite
+- Compatibility
 - Performance
-- Securite
+- Security
 ```
 
-#### Philosophie : Decouper au maximum
+#### Philosophy: Split as Much as Possible
 
-Le but est de **decouper les phases en taches atomiques**. Plus c'est granulaire, mieux c'est :
+The goal is to **split phases into atomic tasks**. The more granular, the better:
 
-- Chaque phase doit etre executable independamment
-- Chaque phase doit compiler/fonctionner seule
-- Un contexte frais par phase = meilleurs resultats
+- Each phase must be executable independently
+- Each phase must compile/work alone
+- Fresh context per phase = better results
 
-#### Regles des phases Backend
+#### Backend Phase Rules
 
-| Regle | Description |
-|-------|-------------|
-| **Ordre** | Domain → Infrastructure → Application → Presentation |
-| **Max 5 items par phase** | Si plus, splitter en sous-phases |
-| **Separer CRUD et business** | Les usecases CRUD et business logic dans des phases differentes |
-| **Compilation independante** | Chaque phase doit compiler seule |
+| Rule | Description |
+|------|-------------|
+| **Order** | Domain → Infrastructure → Application → Presentation |
+| **Max 5 items per phase** | If more, split into sub-phases |
+| **Separate CRUD and business** | CRUD usecases and business logic in different phases |
+| **Independent compilation** | Each phase must compile alone |
 
-**Exemple de split :**
+**Split example:**
 ```
-# Trop charge (> 5 items)
+# Too heavy (> 5 items)
 Phase 2: CreateUser, UpdateUser, DeleteUser, GetUser, ListUsers, ValidateEmail, SendWelcome
 
-# Mieux (splitte)
+# Better (split)
 Phase 2a: CreateUser, UpdateUser, DeleteUser, GetUser, ListUsers (CRUD)
 Phase 2b: ValidateEmail, SendWelcome (Business logic)
 ```
 
-#### Personnalisation
+#### Customization
 
-Ces limites sont **configurables**. Vous pouvez modifier `.claude/commands/plan-feature.md` pour :
-- Augmenter/diminuer le max par phase
-- Changer l'ordre des layers
-- Ajouter des phases custom
+These limits are **configurable**. You can modify `.claude/commands/plan-feature.md` to:
+- Increase/decrease max per phase
+- Change layer order
+- Add custom phases
 
 #### Usage
 
 ```bash
 > /plan-feature name="user-dashboard"
-# Genere: USER_DASHBOARD_FEATURE.md
+# Generates: USER_DASHBOARD_FEATURE.md
 
 > /plan-feature name="payment-integration"
-# Genere: PAYMENT_INTEGRATION_FEATURE.md
+# Generates: PAYMENT_INTEGRATION_FEATURE.md
 ```
 
 ---
 
 ### review
 
-**Commande :** `/review [options]`
+**Command:** `/review [options]`
 
-**But :** Revue de code automatisee avec detection de scope.
+**Purpose:** Automated code review with scope detection.
 
-| Propriete | Valeur |
-|-----------|--------|
-| **Fichier** | `.claude/commands/review.md` |
-| **Arguments** | Tous optionnels (voir ci-dessous) |
+| Property | Value |
+|----------|-------|
+| **File** | `.claude/commands/review.md` |
+| **Arguments** | All optional (see below) |
 
 #### Arguments
 
-| Argument | Description | Defaut |
-|----------|-------------|--------|
-| `mode` | `pushed` (dernier commit) ou `local` (non committe) | local |
-| `spec` | Chemin vers spec/plan .md | - |
-| `commit` | Hash ou range de commits | - |
-| `brief` | Description courte | - |
-| `scope` | Force le scope : `frontend`, `backend`, `all` | auto-detect |
+| Argument | Description | Default |
+|----------|-------------|---------|
+| `mode` | `pushed` (last commit) or `local` (uncommitted) | local |
+| `spec` | Path to spec/plan .md | - |
+| `commit` | Hash or commit range | - |
+| `brief` | Short description | - |
+| `scope` | Force scope: `frontend`, `backend`, `all` | auto-detect |
 
-#### Detection automatique du scope
+#### Automatic Scope Detection
 
-La commande analyse automatiquement les fichiers changes :
+The command automatically analyzes changed files:
 
 ```
 backend/**/*.go → Backend review
 frontend/src/** → Frontend review
-Les deux → Full review
+Both → Full review
 ```
 
-#### Criteres d'analyse
+#### Analysis Criteria
 
-**Backend :**
+**Backend:**
 - Duplications
-- Violations Clean Architecture
-- Code inutilise
-- Problemes de context.Context
-- Gestion d'erreurs
+- Clean Architecture violations
+- Unused code
+- context.Context issues
+- Error handling
 - Performance
 
-**Frontend :**
+**Frontend:**
 - Duplications
-- Violations de patterns
-- Code inutilise
-- Problemes TypeScript
+- Pattern violations
+- Unused code
+- TypeScript issues
 - i18n (next-intl)
-- Accessibilite
+- Accessibility
 - Performance
 
-#### Scores de qualite
+#### Quality Scores
 
-**Backend (100 points) :**
+**Backend (100 points):**
 - Code cleanliness: 25
 - Clean Architecture: 25
 - Error handling: 25
 - Performance: 25
 
-**Frontend (100 points) :**
+**Frontend (100 points):**
 - Code correctness: 20
 - TypeScript: 20
 - Performance: 20
 - i18n: 20
 - Best practices: 20
 
-#### Categorisation des fixes
+#### Fix Categorization
 
-| Categorie | Description |
-|-----------|-------------|
-| **Critical** | Doit etre corrige (bugs, securite) |
-| **Important** | Devrait etre corrige (maintenabilite) |
-| **Nice-to-have** | Ameliorations optionnelles |
+| Category | Description |
+|----------|-------------|
+| **Critical** | Must be fixed (bugs, security) |
+| **Important** | Should be fixed (maintainability) |
+| **Nice-to-have** | Optional improvements |
 
 #### Usage
 
 ```bash
-# Review des changements locaux
+# Review local changes
 > /review
 
-# Review du dernier commit
+# Review last commit
 > /review mode="pushed"
 
-# Review contre une spec
+# Review against a spec
 > /review spec="AUTH_FEATURE.md"
 
-# Review d'un commit specifique
+# Review a specific commit
 > /review commit="abc123"
 
-# Forcer le scope frontend
+# Force frontend scope
 > /review scope="frontend"
 ```
 
@@ -1361,7 +1361,7 @@ Les deux → Full review
 
 ## Settings & Hooks
 
-Le fichier `.claude/settings.json` configure les **hooks** - des actions declenchees sur certains evenements.
+The `.claude/settings.json` file configures **hooks** - actions triggered on certain events.
 
 ### Structure
 
@@ -1370,14 +1370,14 @@ Le fichier `.claude/settings.json` configure les **hooks** - des actions declenc
   "hooks": {
     "Stop": [
       {
-        "command": "afplay /chemin/projet/.claude/song/finish.mp3 &",
+        "command": "afplay /path/project/.claude/song/finish.mp3 &",
         "timeout": 5000
       }
     ],
     "Notification": [
       {
         "matcher": "idle_prompt",
-        "command": "afplay /chemin/projet/.claude/song/need-human.mp3 &",
+        "command": "afplay /path/project/.claude/song/need-human.mp3 &",
         "timeout": 5000
       }
     ]
@@ -1385,39 +1385,39 @@ Le fichier `.claude/settings.json` configure les **hooks** - des actions declenc
 }
 ```
 
-### Types de hooks
+### Hook Types
 
-| Hook | Declencheur | Usage typique |
-|------|-------------|---------------|
-| `Stop` | Tache terminee | Notification sonore/visuelle |
-| `Notification` | Selon le `matcher` | Alertes specifiques |
+| Hook | Trigger | Typical usage |
+|------|---------|---------------|
+| `Stop` | Task completed | Sound/visual notification |
+| `Notification` | According to `matcher` | Specific alerts |
 
-### Matchers pour Notification
+### Matchers for Notification
 
-| Matcher | Declencheur |
-|---------|-------------|
-| `idle_prompt` | Claude attend un input utilisateur |
+| Matcher | Trigger |
+|---------|---------|
+| `idle_prompt` | Claude is waiting for user input |
 
-### Parametres
+### Parameters
 
-| Parametre | Description |
+| Parameter | Description |
 |-----------|-------------|
-| `command` | Commande shell a executer |
-| `timeout` | Timeout en ms (defaut: 5000) |
-| `matcher` | (Notification) Condition de declenchement |
+| `command` | Shell command to execute |
+| `timeout` | Timeout in ms (default: 5000) |
+| `matcher` | (Notification) Trigger condition |
 
-### Creer ses propres hooks
+### Create Your Own Hooks
 
 ```json
 {
   "hooks": {
     "Stop": [
       {
-        "command": "notify-send 'Claude Code' 'Tache terminee!' &",
+        "command": "notify-send 'Claude Code' 'Task completed!' &",
         "timeout": 5000
       },
       {
-        "command": "curl -X POST https://mon-webhook.com/claude-done &",
+        "command": "curl -X POST https://my-webhook.com/claude-done &",
         "timeout": 10000
       }
     ]
@@ -1427,81 +1427,81 @@ Le fichier `.claude/settings.json` configure les **hooks** - des actions declenc
 
 ---
 
-## Systeme Audio
+## Audio System
 
-Le dossier `.claude/song/` contient les fichiers audio pour les notifications.
+The `.claude/song/` folder contains audio files for notifications.
 
-### Fichiers fournis
+### Provided Files
 
-| Fichier | Taille | Usage |
-|---------|--------|-------|
-| `finish.mp3` | 210 KB | Joue quand une tache est terminee |
-| `need-human.mp3` | 74 KB | Joue quand Claude attend votre input |
+| File | Size | Usage |
+|------|------|-------|
+| `finish.mp3` | 210 KB | Plays when a task is completed |
+| `need-human.mp3` | 74 KB | Plays when Claude waits for your input |
 
-### Pourquoi des notifications audio ?
+### Why Audio Notifications?
 
-Quand vous lancez une tache longue (feature complete, review, etc.), vous pouvez faire autre chose. Les sons vous alertent quand :
+When you launch a long task (complete feature, review, etc.), you can do something else. Sounds alert you when:
 
-- **finish.mp3** : Claude a termine, vous pouvez voir le resultat
-- **need-human.mp3** : Claude a besoin de votre input pour continuer
+- **finish.mp3**: Claude is done, you can see the result
+- **need-human.mp3**: Claude needs your input to continue
 
-### Configuration par OS
+### Configuration by OS
 
-#### macOS (par defaut)
+#### macOS (default)
 
 ```json
 {
-  "command": "afplay /chemin/vers/fichier.mp3 &"
+  "command": "afplay /path/to/file.mp3 &"
 }
 ```
 
-`afplay` est inclus dans macOS par defaut.
+`afplay` is included in macOS by default.
 
 #### Linux
 
 ```bash
-# Installer un lecteur audio
-sudo apt install mpv  # ou ffplay, aplay, paplay
+# Install an audio player
+sudo apt install mpv  # or ffplay, aplay, paplay
 
 # Configuration
 {
-  "command": "mpv --no-video /chemin/vers/fichier.mp3 &"
+  "command": "mpv --no-video /path/to/file.mp3 &"
 }
 ```
 
-Alternatives :
-- `ffplay -nodisp -autoexit fichier.mp3 &`
-- `aplay fichier.wav &` (WAV uniquement)
-- `paplay fichier.mp3 &` (PulseAudio)
+Alternatives:
+- `ffplay -nodisp -autoexit file.mp3 &`
+- `aplay file.wav &` (WAV only)
+- `paplay file.mp3 &` (PulseAudio)
 
 #### Windows (PowerShell)
 
 ```json
 {
-  "command": "powershell -c (New-Object Media.SoundPlayer 'C:\\chemin\\fichier.wav').PlaySync()"
+  "command": "powershell -c (New-Object Media.SoundPlayer 'C:\\path\\file.wav').PlaySync()"
 }
 ```
 
-Ou avec un lecteur externe :
+Or with an external player:
 ```json
 {
-  "command": "start /min wmplayer C:\\chemin\\fichier.mp3"
+  "command": "start /min wmplayer C:\\path\\file.mp3"
 }
 ```
 
-### Remplacer les sons
+### Replace Sounds
 
-1. Placez vos fichiers `.mp3` dans `.claude/song/`
-2. Mettez a jour les chemins dans `settings.json`
+1. Place your `.mp3` files in `.claude/song/`
+2. Update paths in `settings.json`
 
-**Recommandations :**
-- Sons courts (< 5 secondes)
-- Volume modere
-- Distincts l'un de l'autre
+**Recommendations:**
+- Short sounds (< 5 seconds)
+- Moderate volume
+- Distinct from each other
 
-### Desactiver les sons
+### Disable Sounds
 
-Supprimez ou commentez les hooks dans `settings.json` :
+Remove or comment out hooks in `settings.json`:
 
 ```json
 {
@@ -1512,175 +1512,175 @@ Supprimez ou commentez les hooks dans `settings.json` :
 
 ---
 
-## Personnalisation pour Votre Stack
+## Customization for Your Stack
 
-Ce framework est **independant du langage et du framework**. Les patterns sont universels.
+This framework is **language and framework agnostic**. The patterns are universal.
 
-### Principe de base
+### Basic Principle
 
-Les agents et commandes fonctionnent avec **n'importe quelle stack** car ils :
+Agents and commands work with **any stack** because they:
 
-1. **Explorent** votre code existant (pas de presuppose sur la structure)
-2. **Cherchent des patterns** dans votre projet
-3. **S'adaptent** a vos conventions
+1. **Explore** your existing code (no assumption about structure)
+2. **Search for patterns** in your project
+3. **Adapt** to your conventions
 
-### Adapter CLAUDE.md
+### Adapt CLAUDE.md
 
-#### Frontend : Next.js → Vue/Svelte/Angular
+#### Frontend: Next.js → Vue/Svelte/Angular
 
-**Original (Next.js) :**
+**Original (Next.js):**
 ```markdown
 - **Frontend**: Next.js 16 (App Router), TypeScript, TailwindCSS, React Query, Shadcn UI
 ```
 
-**Vue.js :**
+**Vue.js:**
 ```markdown
 - **Frontend**: Vue 3 (Composition API), TypeScript, TailwindCSS, Pinia, PrimeVue
 ```
 
-**Svelte :**
+**Svelte:**
 ```markdown
 - **Frontend**: SvelteKit 2, TypeScript, TailwindCSS, Svelte stores
 ```
 
-**Angular :**
+**Angular:**
 ```markdown
 - **Frontend**: Angular 17, TypeScript, TailwindCSS, NgRx, Angular Material
 ```
 
-#### Backend : Go → Python/Rust/Node.js
+#### Backend: Go → Python/Rust/Node.js
 
-**Original (Go) :**
+**Original (Go):**
 ```markdown
 - **Backend**: Go (Golang), Fiber, Clean Architecture
 ```
 
-**Python :**
+**Python:**
 ```markdown
 - **Backend**: Python 3.12, FastAPI, Clean Architecture
 ```
 
-**Rust :**
+**Rust:**
 ```markdown
 - **Backend**: Rust, Axum, Clean Architecture
 ```
 
-**Node.js :**
+**Node.js:**
 ```markdown
 - **Backend**: Node.js, NestJS, Clean Architecture
 ```
 
-#### Database : Supabase → Autres
+#### Database: Supabase → Others
 
-**Original (Supabase) :**
+**Original (Supabase):**
 ```markdown
 - **Database**: Supabase (PostgreSQL), Redis
 ```
 
-**PostgreSQL direct :**
+**Direct PostgreSQL:**
 ```markdown
 - **Database**: PostgreSQL 16, Redis
 ```
 
-**MySQL :**
+**MySQL:**
 ```markdown
 - **Database**: MySQL 8, Redis
 ```
 
-**MongoDB :**
+**MongoDB:**
 ```markdown
 - **Database**: MongoDB 7, Redis
 ```
 
-### Adapter les agents
+### Adapt Agents
 
-#### explore-db sans Supabase
+#### explore-db without Supabase
 
-Si vous n'utilisez pas Supabase, modifiez `.claude/agents/explore-db.md` pour utiliser vos outils :
+If you don't use Supabase, modify `.claude/agents/explore-db.md` to use your tools:
 
 ```markdown
-# Pour PostgreSQL direct
-Utilise Bash avec `psql` en read-only:
+# For direct PostgreSQL
+Use Bash with `psql` in read-only:
 - psql -c "SELECT * FROM information_schema.tables"
 - psql -c "SELECT * FROM pg_indexes"
 
-# Pour MongoDB
-Utilise Bash avec `mongosh`:
+# For MongoDB
+Use Bash with `mongosh`:
 - mongosh --eval "db.getCollectionNames()"
 - mongosh --eval "db.users.find().limit(5)"
 ```
 
-### Patterns universels a conserver
+### Universal Patterns to Keep
 
-Ces patterns fonctionnent avec **toute stack** :
+These patterns work with **any stack**:
 
-| Pattern | Description | Adaptable a |
-|---------|-------------|-------------|
-| **Clean Architecture** | Separation en layers | Tout langage backend |
-| **Explore → Plan → Validate → Implement** | Workflow de dev | Tout projet |
-| **DRY** | Pas de duplication | Universel |
-| **Configuration externe** | Pas de hardcode | Universel |
-| **Error handling exhaustif** | Gerer tous les cas | Universel |
-| **i18n** | Pas de strings hardcodes | Tout frontend |
+| Pattern | Description | Adaptable to |
+|---------|-------------|--------------|
+| **Clean Architecture** | Layer separation | Any backend language |
+| **Explore → Plan → Validate → Implement** | Dev workflow | Any project |
+| **DRY** | No duplication | Universal |
+| **External configuration** | No hardcode | Universal |
+| **Exhaustive error handling** | Handle all cases | Universal |
+| **i18n** | No hardcoded strings | Any frontend |
 
-### Checklist de personnalisation
+### Customization Checklist
 
-- [ ] Mettre a jour la stack dans `CLAUDE.md` (section Project Overview)
-- [ ] Adapter les chemins d'exemple (`frontend/src/`, `backend/internal/`)
-- [ ] Modifier les commandes de build si differentes (`npm run dev`, `go run`, etc.)
-- [ ] Adapter `explore-db.md` si pas Supabase
-- [ ] Mettre a jour les chemins audio dans `settings.json`
-- [ ] Adapter les conventions de nommage si differentes
-- [ ] Ajouter vos propres libraries dans les exemples Context7
+- [ ] Update stack in `CLAUDE.md` (Project Overview section)
+- [ ] Adapt example paths (`frontend/src/`, `backend/internal/`)
+- [ ] Modify build commands if different (`npm run dev`, `go run`, etc.)
+- [ ] Adapt `explore-db.md` if not using Supabase
+- [ ] Update audio paths in `settings.json`
+- [ ] Adapt naming conventions if different
+- [ ] Add your own libraries in Context7 examples
 
 ---
 
-## Philosophie & Design Patterns
+## Philosophy & Design Patterns
 
 ### DRY (Don't Repeat Yourself)
 
-**Avant de creer** quoi que ce soit, Claude est instruit de :
+**Before creating** anything, Claude is instructed to:
 
-1. Chercher l'existant dans le projet
-2. Verifier les patterns etablis
-3. Reutiliser et adapter
+1. Search for existing in the project
+2. Check established patterns
+3. Reuse and adapt
 
-Cela evite la duplication et maintient la coherence.
+This avoids duplication and maintains consistency.
 
 ### Explore → Plan → Validate → Implement → Verify
 
-Chaque commande suit ce cycle :
+Each command follows this cycle:
 
 ```
-EXPLORE    → Collecter le contexte (agents en parallele)
+EXPLORE    → Collect context (agents in parallel)
      ↓
-PLAN       → Analyser et planifier
+PLAN       → Analyze and plan
      ↓
-VALIDATE   → Obtenir l'approbation utilisateur
+VALIDATE   → Get user approval
      ↓
-IMPLEMENT  → Coder
+IMPLEMENT  → Code
      ↓
-VERIFY     → Tester (build, tests, DB)
+VERIFY     → Test (build, tests, DB)
 ```
 
-**Pourquoi ?**
-- Pas d'implementation sans contexte complet
-- L'utilisateur garde le controle
-- Verification systematique
+**Why?**
+- No implementation without complete context
+- User keeps control
+- Systematic verification
 
 ### Ultra Think Strategy
 
-A chaque transition majeure, Claude reflechit :
+At each major transition, Claude reflects:
 
 ```
-"Ai-je explore tous les aspects pertinents ?"
-"Y a-t-il des edge cases que j'ai manques ?"
-"Mon plan est-il coherent avec l'existant ?"
+"Have I explored all relevant aspects?"
+"Are there edge cases I missed?"
+"Is my plan consistent with existing code?"
 ```
 
 ### Clean Architecture
 
-Separation stricte des responsabilites :
+Strict separation of responsibilities:
 
 ```
 ┌─────────────────────────────────────────┐
@@ -1698,106 +1698,106 @@ Separation stricte des responsabilites :
 └─────────────────────────────────────────┘
 ```
 
-Les dependances vont vers l'interieur (Domain ne depend de rien).
+Dependencies go inward (Domain depends on nothing).
 
-### Validation utilisateur obligatoire
+### Mandatory User Validation
 
-Claude **ne code jamais** sans approbation prealable pour les taches non triviales. Cela garantit :
+Claude **never codes** without prior approval for non-trivial tasks. This guarantees:
 
-- Alignement avec les attentes
-- Pas de surprise
-- Opportunite de correction avant implementation
+- Alignment with expectations
+- No surprises
+- Correction opportunity before implementation
 
 ---
 
 ## Troubleshooting
 
-### Les sons ne jouent pas
+### Sounds Don't Play
 
-**macOS :**
+**macOS:**
 ```bash
-# Tester manuellement
+# Test manually
 afplay .claude/song/finish.mp3
 
-# Verifier les permissions
+# Check permissions
 # System Preferences → Security & Privacy → Privacy → Microphone
 ```
 
-**Linux :**
+**Linux:**
 ```bash
-# Installer mpv si pas present
+# Install mpv if not present
 sudo apt install mpv
 
-# Tester
+# Test
 mpv --no-video .claude/song/finish.mp3
 ```
 
-### Les agents ne sont pas reconnus
+### Agents Not Recognized
 
-Verifiez que :
-1. Le dossier `.claude/agents/` existe
-2. Les fichiers `.md` ont le bon format YAML frontmatter
-3. Vous etes dans le bon repertoire projet
+Verify that:
+1. The `.claude/agents/` folder exists
+2. The `.md` files have the correct YAML frontmatter format
+3. You are in the correct project directory
 
-### Les commandes ne fonctionnent pas
+### Commands Don't Work
 
 ```bash
-# Verifier la structure
+# Check structure
 ls -la .claude/commands/
 
-# Les fichiers doivent avoir l'extension .md
-# et le bon format YAML frontmatter
+# Files must have .md extension
+# and correct YAML frontmatter format
 ```
 
-### Context7 ne trouve pas ma librairie
+### Context7 Can't Find My Library
 
-Fallback vers WebSearch :
+Fallback to WebSearch:
 ```
-# Dans votre prompt a Claude
-"Utilise WebSearch pour trouver la doc de [librairie]"
+# In your prompt to Claude
+"Use WebSearch to find docs for [library]"
 ```
 
-### Claude ignore mes guidelines
+### Claude Ignores My Guidelines
 
-Verifiez que :
-1. `CLAUDE.md` est a la racine du projet
-2. Le fichier est bien formate (pas d'erreurs de syntaxe markdown)
-3. Relancez Claude Code pour recharger les instructions
+Verify that:
+1. `CLAUDE.md` is at the project root
+2. The file is well formatted (no markdown syntax errors)
+3. Restart Claude Code to reload instructions
 
 ---
 
 ## Contributing
 
-Les contributions sont les bienvenues !
+Contributions are welcome!
 
-### Comment contribuer
+### How to Contribute
 
-1. **Fork** le repository
-2. **Creez** une branche (`git checkout -b feature/ma-feature`)
-3. **Committez** vos changements (`git commit -m 'feat: Add ma feature'`)
-4. **Push** (`git push origin feature/ma-feature`)
-5. **Ouvrez** une Pull Request
+1. **Fork** the repository
+2. **Create** a branch (`git checkout -b feature/my-feature`)
+3. **Commit** your changes (`git commit -m 'feat: Add my feature'`)
+4. **Push** (`git push origin feature/my-feature`)
+5. **Open** a Pull Request
 
 ### Guidelines
 
-- Suivez les conventions existantes
-- Documentez les nouvelles fonctionnalites
-- Testez vos changements
-- Un PR = une feature/fix
+- Follow existing conventions
+- Document new features
+- Test your changes
+- One PR = one feature/fix
 
-### Idees de contributions
+### Contribution Ideas
 
-- Nouveaux agents specialises
-- Nouvelles commandes de workflow
-- Support d'autres bases de donnees
-- Traductions
-- Ameliorations de documentation
+- New specialized agents
+- New workflow commands
+- Support for other databases
+- Translations
+- Documentation improvements
 
 ---
 
 ## License
 
-MIT License - voir [LICENSE](LICENSE)
+MIT License - see [LICENSE](LICENSE)
 
 ```
 MIT License
@@ -1817,7 +1817,7 @@ copies or substantial portions of the Software.
 
 ---
 
-## Auteur
+## Author
 
 **[@Aurealibe](https://github.com/Aurealibe)**
 
